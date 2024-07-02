@@ -14,7 +14,6 @@
 
 typedef any_ptr (*task_func)(any_ptr);
 
-
 struct task_desc {
     size_t tid;
     task_func task;
@@ -22,7 +21,7 @@ struct task_desc {
 };
 
 struct tasks_desc {
-    struct task_desc* tasks;
+    struct task_desc* tasks; // array of task_desc
     size_t task_cnt;
     size_t max_thds;
 };
@@ -37,21 +36,30 @@ struct tasks_sync {
     pthread_mutex_t mu_lock;
     pthread_cond_t cond_sema;
 
-    size_t comp_counts;
+    size_t comp_count;
+    size_t batch_size;
     size_t success;
     size_t failure;
 };
+
+typedef any_ptr* tasks_res;
+
 
 #define COWORK_OK 0
 #define COWORK_ERR 1
 
 #define CPU_MAX_THDS 12 // get from cpu xabi
 
-struct tasks_option get_tasks_option(int );
-struct tasks_sync* tasks_sync_init(void );
-void tasks_sync_destroy(struct tasks_sync* );
-int coworker(struct tasks_desc* , struct tasks_option );
+int coworker(struct tasks_desc* , struct tasks_sync* , tasks_res , struct tasks_option );
 void tasks_desc_free(struct tasks_desc* );
+
+struct tasks_option get_tasks_option(int );
+
+struct tasks_sync* tasks_sync_init(void );
+void tasks_sync_free(struct tasks_sync* );
+
+tasks_res tasks_res_init(size_t );
+void tasks_res_free(tasks_res );
 
 #endif// #define COWORK_H
 

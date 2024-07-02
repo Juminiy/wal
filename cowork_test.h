@@ -18,11 +18,28 @@ any_ptr test_fn5(any_ptr _ptr);
         do { \
             tdesc.tid = id; \
             tdesc.task = test_fn ##id; \
-            int* iaddr = (int*)malloc(sizeof(int)); \
-            *iaddr = id; \
-            tdesc.param_list = iaddr; \
         }while(0)
 
-struct tasks_desc* make_test_tasks_desc(void );
+#define decl_test_fnx(xid, xms) \
+        any_ptr test_fn##xid(any_ptr _ptr) \
+        { \
+            INFOF("start tid: %02d", xid); \
+            call_fnx_stack(xms); \
+            struct tasks_sync* state = (struct tasks_sync*)(_ptr); \
+            if (state) { \
+                pthread_mutex_lock(&state->mu_lock); \
+                state->comp_count++; \
+                if(state->comp_count == state->batch_size){ \
+                    pthread_cond_signal(&state->cond_sema); \
+                } \
+                pthread_mutex_unlock(&state->mu_lock); \
+            } \
+            INFOF("end tid: %02d", xid); \
+            return NULL; \
+        }
+
+struct tasks_desc* make_test_tasks_desc(size_t );
+
+void cowork_example();
 
 #endif// #define COWORK_TEST_H

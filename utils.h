@@ -6,22 +6,27 @@
 #if defined(__GNUC__) || \
     defined(__clang__) || \
     defined(__llvm__)
+    #include <unistd.h>
     #define __TYPEOF__ __typeof__
-    #define PAUSE(ms) usleep(ms)
+    #define PAUSE(_ms) usleep(_ms * 1000) // usleep(microseconds)
 
 #elif defined(__MINGW64__) || \
         defined(__MINGW32__) || \
         defined(__CYGWIN64__) || \
         defined(__CYGWIN__) || \
         defined(__MSYS__)
+    #include <unistd.h>
     #define __TYPEOF__ typeof
-    #define PAUSE(ms) sleep(ms / 1000000)
+    #define PAUSE(_ms) sleep(_ms / 1000) // sleep(seconds)
 
 #else
-    #define __TYPEOF__ __typeof__
-    #define PAUSE(ms) Sleep(ms * 1000)
+    #include <windows.h>
+    #define __TYPEOF__ __typeof__ // MSVC delete
+    #define PAUSE(_ms) Sleep(_ms) // Sleep(milliseconds)
 
 #endif
+
+char* get_time_now_str(void );
 
 #define _i32_max(__x, __y) \
         ({ \
