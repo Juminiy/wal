@@ -3,6 +3,8 @@
 
 c_args= -std=gnu99 -Wall -pedantic -O0 -g -DDEBUG
 
+app_fd= app.log
+
 build: $(patsubst %.c,%.o,$(wildcard *.c))
 
 main: *.o
@@ -13,3 +15,4 @@ main: *.o
 
 clean:
 	rm -f main *.o *.exe
+	rm -f $(app_fd)

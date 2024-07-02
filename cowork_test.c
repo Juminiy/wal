@@ -104,7 +104,7 @@ struct tasks_desc* make_test_tasks_desc(size_t sz)
     return tdesc;
 }
 
-void cowork_example()
+void cowork_example(void )
 {
     size_t tasks_size = 6;
     struct tasks_desc* tdesc = make_test_tasks_desc(tasks_size);

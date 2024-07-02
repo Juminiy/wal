@@ -9,6 +9,7 @@
 #include <time.h>
 #include <string.h>
 #include <stdlib.h>
+#include <pthread.h>
 
 #define FSYNC_ERR_CODE -1
 #define FSYNC_ERR_MSG "fsync error"
@@ -21,7 +22,7 @@
 int write_record_log(const char *, const char *);
 int write_record_log_json(const char *, const char *);
 
-void write_log_example();
+void write_log_example(void );
 
 #define DEFAULT_LOG_PATH "app.log"
 #define DEFAULT_LOG_BUF_LEN 64
@@ -32,13 +33,16 @@ void write_log_example();
 #define LOG_TYPE_ERROR "error"
 #define LOG_TYPE_FATAL "fatal"
 
+pthread_mutex_t log_mutex;
 
 #define ILOG(file_name, type, msg) \
         do { \
             char *app_buf = (char*)(malloc(5 + strlen(msg))); \
             strncpy(app_buf, type, 5); \
             strncpy(app_buf + 5, msg, strlen(msg)); \
+            pthread_mutex_lock(&log_mutex); \
             write_record_log(file_name, app_buf); \
+            pthread_mutex_unlock(&log_mutex); \
             free(app_buf); \
         } while(0)
 

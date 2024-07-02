@@ -40,6 +40,6 @@ any_ptr test_fn5(any_ptr _ptr);
 
 struct tasks_desc* make_test_tasks_desc(size_t );
 
-void cowork_example();
+void cowork_example(void );
 
 #endif// #define COWORK_TEST_H

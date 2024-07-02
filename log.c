@@ -1,5 +1,6 @@
 #include "log.h"
 #include "utils.h"
+#include <sys/time.h>
 
 // must be free after used
 char* get_time_now_str(void )
