@@ -1,9 +1,12 @@
-#include "log.h"
-#include "cowork.h"
+#include "../include/log.h"
+#include "../include/cowork.h"
+
 #include <stdlib.h>
 
 /// @brief waitgroup
 /// @param tdesc for tasks description
+/// @param state for tasks syncronized
+/// @param res for tasks return values
 /// @param opts for tasks apply option
 /// @return 
 int coworker(struct tasks_desc* tdesc, 
@@ -11,8 +14,8 @@ int coworker(struct tasks_desc* tdesc,
             tasks_res res, 
             struct tasks_option opts)
 {   
-    int aval_thds = _i32_min(tdesc->max_thds, CPU_MAX_THDS);
-    int batch_thds =  _i32_min(tdesc->task_cnt, aval_thds);
+    int aval_thds = MINInteger(tdesc->max_thds, CPU_MAX_THDS);
+    int batch_thds = MINInteger(tdesc->task_cnt, aval_thds);
     
     // state init
     state->batch_size = batch_thds;
@@ -53,7 +56,7 @@ int coworker(struct tasks_desc* tdesc,
 
         for(int i = 0; i < batch_thds; i++)
         {
-            if(pthread_join(thd[i], res)) 
+            if(pthread_join(thd[i], &res[i])) 
             {
                 ERRORL("cowork join error");
                 return COWORK_ERR;
@@ -69,7 +72,7 @@ int coworker(struct tasks_desc* tdesc,
     return COWORK_OK;
 }
 
-void tasks_desc_free(struct tasks_desc * tds)
+void tasks_desc_free(struct tasks_desc* tds)
 {
     // for(int i = 0; i < tds->task_cnt; ++i)
     //     free(tds->tasks->param_list);
@@ -120,10 +123,25 @@ void tasks_sync_free(struct tasks_sync* state)
 
 tasks_res tasks_res_init(size_t sz)
 {
-    return NULL;
+    return (tasks_res)malloc(sizeof(any_ptr) * sz);
 }
 
-void tasks_res_free(tasks_res res)
+void tasks_res_display(tasks_res res, size_t sz, display_task_res fn)
 {
-    
+    if (res == NULL)
+        return;
+    for(size_t i = 0; i < sz; i++)
+        if (res[i])
+            fn(res[i]);
+}
+
+void tasks_res_free(tasks_res res, size_t sz)
+{
+    if (res == NULL)
+        return;
+    for(size_t i = 0; i < sz; i++)
+    {
+        free(res[i]);
+    }
+    free(res);
 }

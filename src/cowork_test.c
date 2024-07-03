@@ -1,14 +1,27 @@
-#include "cowork.h"
-#include "log.h"
-#include "cowork_test.h"
+#include "../include/cowork.h"
+#include "../include/log.h"
+#include "../include/math.h"
+
+#include "../include/cowork_test.h"
 
 #include <stdio.h>
 #include <time.h>
 #include <pthread.h>
+#include <stdlib.h>
 
+// pause of faked work
+// return NULL
 void call_fnx_stack(int ms)
 {
     PAUSE(ms); 
+}
+
+// pause of faked work
+// return any_ptr
+any_ptr call_fnx_ret_val(int ms)
+{
+    PAUSE(ms);
+    return make_faked_retval();
 }
 
 // any_ptr test_fn0(any_ptr _ptr) 
@@ -77,12 +90,12 @@ void call_fnx_stack(int ms)
 //     return NULL;
 // }
 
-decl_test_fnx(0, 1000) // 1s
-decl_test_fnx(1, 8500) // 8.5s
-decl_test_fnx(2, 5700) // 5.7s
-decl_test_fnx(3, 6300) // 6.3s
-decl_test_fnx(4, 4000) // 4s
-decl_test_fnx(5, 900) // 0.9s
+decl_test_fnx(0, 1000, call_fnx_ret_val) // 1s
+decl_test_fnx(1, 8500, call_fnx_ret_val) // 8.5s
+decl_test_fnx(2, 5700, call_fnx_ret_val) // 5.7s
+decl_test_fnx(3, 6300, call_fnx_ret_val) // 6.3s
+decl_test_fnx(4, 4000, call_fnx_ret_val) // 4s
+decl_test_fnx(5, 900, call_fnx_ret_val) // 0.9s
 
 struct tasks_desc* make_test_tasks_desc(size_t sz)
 {
@@ -126,5 +139,34 @@ void cowork_example(void )
     // callback do
     tasks_desc_free(tdesc); 
     tasks_sync_free(tstate);
-    tasks_res_free(tres);
+    tasks_res_display(tres, tasks_size, display_faked_res);
+    tasks_res_free(tres, tasks_size);
+}
+
+struct test_retval* make_faked_retval()
+{
+    srand((unsigned int)time(NULL));
+    struct test_retval* val = (struct test_retval*)malloc(sizeof(struct test_retval));
+
+    val->i32_val = RAND_Int(0, 1024);
+
+    int char_sz = RAND_Int(0, 16);
+    val->str_val = (char*)malloc(sizeof(char) * char_sz); 
+    RAND_Str(val->str_val, char_sz);
+
+    RAND_F64Arr(val->f64_arr_val, 8, 0.0, 100.0);
+
+    return val;
+}
+
+void display_faked_res(any_ptr r0)
+{
+    struct test_retval* val = (struct test_retval*)(r0);
+    CLOG_FMT(
+        LOG_TYPE__INFO, 
+        "i32_val [%d], str_val [%s], f64_arr_val_avg [%.5f]", 
+        val->i32_val, 
+        val->str_val, 
+        f64_arr_avg(val->f64_arr_val, 8)
+    );
 }

@@ -1,6 +1,22 @@
-#include "log.h"
-#include "utils.h"
+#include "../include/log.h"
+#include "../include/utils.h"
+
 #include <sys/time.h>
+
+// definition log_mutex
+pthread_mutex_t log_mutex;
+
+// void ilog(const char *file_name, const char *type, char *msg)
+// {
+//     char *app_buf = (char*)(malloc(5 + strlen(msg)));
+//     strncpy(app_buf, type, 5);
+//     strncpy(app_buf + 5, msg, strlen(msg));
+//     pthread_mutex_lock(&log_mutex);
+//     write_record_log(file_name, app_buf);
+//     pthread_mutex_unlock(&log_mutex);
+//     free(app_buf);
+// }
+
 
 // must be free after used
 char* get_time_now_str(void )
@@ -97,4 +113,3 @@ void log_log_example(void )
     FATAL("26");
     FATALF("i got %02d abortions", 26);
 }
-

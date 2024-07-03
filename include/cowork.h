@@ -43,7 +43,7 @@ struct tasks_sync {
 };
 
 typedef any_ptr* tasks_res;
-
+typedef void (*display_task_res)(any_ptr);
 
 #define COWORK_OK 0
 #define COWORK_ERR 1
@@ -59,7 +59,8 @@ struct tasks_sync* tasks_sync_init(void );
 void tasks_sync_free(struct tasks_sync* );
 
 tasks_res tasks_res_init(size_t );
-void tasks_res_free(tasks_res );
+void tasks_res_display(tasks_res , size_t , display_task_res );
+void tasks_res_free(tasks_res, size_t );
 
 #endif// #define COWORK_H
 

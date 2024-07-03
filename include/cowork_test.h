@@ -20,11 +20,15 @@ any_ptr test_fn5(any_ptr _ptr);
             tdesc.task = test_fn ##id; \
         }while(0)
 
-#define decl_test_fnx(xid, xms) \
+// fncall may vary from 
+// 1. discard return value: return NULL
+// 2. accept return value: return any_ptr
+#define decl_test_fnx(xid, xms, fncall) \
         any_ptr test_fn##xid(any_ptr _ptr) \
         { \
+            INFOF("thread id: %u", pthread_self()); \
             INFOF("start tid: %02d", xid); \
-            call_fnx_stack(xms); \
+            any_ptr val = fncall(xms); \
             struct tasks_sync* state = (struct tasks_sync*)(_ptr); \
             if (state) { \
                 pthread_mutex_lock(&state->mu_lock); \
@@ -35,11 +39,26 @@ any_ptr test_fn5(any_ptr _ptr);
                 pthread_mutex_unlock(&state->mu_lock); \
             } \
             INFOF("end tid: %02d", xid); \
+            pthread_exit(val); \
             return NULL; \
         }
 
+void cowork_example(void );
 struct tasks_desc* make_test_tasks_desc(size_t );
 
-void cowork_example(void );
+
+struct test_retval {
+    int i32_val;
+    char* str_val;
+    double f64_arr_val[8];
+};
+
+struct test_retval* make_faked_retval();
+void display_faked_res(any_ptr );
+
+// multiple threads safe merge sort
+void merge_sort_mts();
+// multiple threads safe longest common sequence
+void lcs_mts();
 
 #endif// #define COWORK_TEST_H

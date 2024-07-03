@@ -33,7 +33,10 @@ void write_log_example(void );
 #define LOG_TYPE_ERROR "error"
 #define LOG_TYPE_FATAL "fatal"
 
-pthread_mutex_t log_mutex;
+// declare global log_mutex
+extern pthread_mutex_t log_mutex;
+
+// void ilog(const char *, const char *, char *);
 
 #define ILOG(file_name, type, msg) \
         do { \
@@ -50,7 +53,9 @@ pthread_mutex_t log_mutex;
         do { \
             char log_buf[DEFAULT_LOG_BUF_LEN]; \
             int sz = snprintf(log_buf, DEFAULT_LOG_BUF_LEN, fmt, __VA_ARGS__); \
-            log_buf[sz] = 0; \
+            if (sz == -1) { \
+                perror("need to alloc more"); \
+            } \
             ILOG(file_name, type, log_buf); \
         } while(0)
 
@@ -71,13 +76,20 @@ pthread_mutex_t log_mutex;
 
 
 #define CLOG(type, msg) \
-        printf("type [%s], time [%s], msg [%s]\n", type, get_time_now_str(), log_info)
+        do { \
+            char* time_buf = get_time_now_str(); \
+            printf("type [%s], time [%s], msg [%s]\n", type, time_buf, msg); \
+            free(time_buf); \
+        } while(0)
+        
 #define CLOG_FMT(type, fmt, ...) \
         do { \
             char log_buf[DEFAULT_LOG_BUF_LEN]; \
             int sz = snprintf(log_buf, DEFAULT_LOG_BUF_LEN, fmt, __VA_ARGS__); \
             log_buf[sz] = 0; \
-            printf("type [%s], time [%s], msg [%s]\n", type, get_time_now_str(), log_buf); \
+            char * time_buf = get_time_now_str(); \
+            printf("type [%s], time [%s], msg [%s]\n", type, time_buf, log_buf); \
+            free(time_buf); \
         } while(0)
 
 void log_log_example(void );
