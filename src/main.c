@@ -11,7 +11,6 @@ void _init_callback(void )
     pthread_mutex_init(&log_mutex, NULL);
 }
 
-
 int main(int argc, char** argv, char** envp)
 {   
     // cowork_example();

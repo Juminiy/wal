@@ -3,7 +3,7 @@ export
 .PHONY:
 	all main build test clean ssrc yyjson
 
-c_args= -std=gnu99 -Wall -pedantic $(c_release) -lpthread
+c_args= -std=gnu99 -Wall -pedantic $(c_debug) -lpthread
 c_release= -O2 -DRELEASE
 c_debug= -O0 -g -DDEBUG
 c_deep_stack= -Wl,--stack=536870912

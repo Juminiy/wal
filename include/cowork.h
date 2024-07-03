@@ -63,4 +63,3 @@ void tasks_res_display(tasks_res , size_t , display_task_res );
 void tasks_res_free(tasks_res, size_t );
 
 #endif// #define COWORK_H
-
