@@ -4,17 +4,18 @@
 
 #include <stddef.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 // Not MTS
-void put_stu(stu_table tbl, stu_info stu)
+void put_stu(stu_table *tbl, stu_info stu)
 {   
     stu_elem elem;
-    HASH_FIND_INT(tbl, &stu.id, elem);
+    HASH_FIND_INT(*tbl, &stu.id, elem);
     if (elem == NULL) {
         elem = (stu_elem)malloc(sizeof * elem);
     }
     elem->stu = stu;
-    HASH_ADD_INT(tbl, stu.id, elem);
+    HASH_ADD_INT(*tbl, stu.id, elem);
 }
 
 stu_info get_stu(stu_table tbl, int key)
@@ -28,12 +29,12 @@ stu_info get_stu(stu_table tbl, int key)
     return stu;
 }
 
-void del_stu(stu_table tbl, int key)
+void del_stu(stu_table *tbl, int key)
 {
     stu_elem elem;
-    HASH_FIND_INT(tbl, &key, elem);
+    HASH_FIND_INT(*tbl, &key, elem);
     if (elem) {
-        HASH_DEL(tbl, elem);
+        HASH_DEL(*tbl, elem);
         free(elem);
     }
 }
@@ -65,6 +66,8 @@ int* keys(stu_table tbl)
 
 stu_info* values(stu_table tbl)
 {
+    if(tbl == NULL)
+        return NULL;
     stu_info *value_of = (stu_info*)malloc(sizeof(stu_info) * size(tbl));
     int index_of = 0;
     stu_elem cur, iter;
@@ -74,11 +77,11 @@ stu_info* values(stu_table tbl)
     return value_of;
 }
 
-void del_stus(stu_table tbl)
+void del_stus(stu_table *tbl)
 {
     stu_elem cur, iter;
-    HASH_ITER(hh, tbl, cur, iter) {
-        HASH_DEL(tbl, cur);
+    HASH_ITER(hh, *tbl, cur, iter) {
+        HASH_DEL(*tbl, cur);
         free(cur);
     }
 }
@@ -86,7 +89,7 @@ void del_stus(stu_table tbl)
 stu_info gen_stu()
 {
     stu_info stu;
-    stu.id = RAND_Int(0, 1024);
+    stu.id = RAND_Int(0, 128);
     stu.age = RAND_Int(5, 24);
     stu.class_no = RAND_Int(1, 30);
     stu.grade_no = RAND_Int(0, 10);
@@ -111,22 +114,47 @@ char *stu_str(stu_info stu)
         stu.height,
         stu.weight
     );
+    return stu_buf;
 }
 
 void test_stu_map()
 {
+    DEBUGL("info fn");
     stu_table stus = NULL;
     // stu_info stu;
     for (int i = 0; i < 64; i++)
     {
-        put_stu(stus, gen_stu());
+        put_stu(&stus, gen_stu());
+    }
+    if (stus == NULL){
+        ERRORL("stu table is null");
+        return;
     }
 
-    stu_info* stu_infos = values(*stus);
+    stu_info* stu_infos = values(stus);
+    if (stu_infos == NULL)
+    {   
+        ERRORL("stu infos is null");
+        return;
+    }
+
+    DEBUGL("start print");
+
     for(int i = 0; i < 64; i++)
     {
-        INFO(stu_str(stu_infos[i]));
+        char *str_buf = stu_str(stu_infos[i]);
+        INFO(str_buf);
+        free(str_buf);
     }
 
+    // for(int i = 0; i < 128; i++)
+    // {
+    //     char *str_buf = stu_str(get_stu(stus, RAND_Int(0, 128)));
+    //     INFO(str_buf);
+    //     free(str_buf);
+    // }
+
+    DEBUGL("finish get");
     free(stu_infos);
+    del_stus(stus);
 }

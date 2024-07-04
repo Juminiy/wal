@@ -15,7 +15,8 @@ int main(int argc, char** argv, char** envp)
 {   
     // test_iter_json_file("data/json/multiple_embedded_26s.json");
     
-    test_stu_map();
+    // test_stu_map();
+    INFO("stop use uthash.h");
     return 0;
 }
 

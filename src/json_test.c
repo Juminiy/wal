@@ -7,6 +7,11 @@
 #include <string.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <limits.h>
+#include <float.h>
+#include <stdint.h>
 
 void test_read_json_string_sample_code(void )
 {
@@ -206,11 +211,19 @@ void iter_yyjson_doc_root(const yyjson_val *root)
         return;
     yyjson_type typ = yyjson_get_type(root);
     yyjson_subtype subtyp = yyjson_get_subtype(root);
+
+    const char *raw_val;
+    bool bool_val;
+    uint64_t u64_val;
+    int64_t s64_val;
+    double f64_val;
+    const char *str_val;
+
     switch(typ)
     {
         // meta value type: RAW, NULL, BOOL, NUM, STR
         case YYJSON_TYPE_RAW:
-            const char * raw_val = yyjson_get_raw(root);
+            raw_val = yyjson_get_raw(root);
             INFO(raw_val);
             break;
 
@@ -219,25 +232,25 @@ void iter_yyjson_doc_root(const yyjson_val *root)
             break;
 
         case YYJSON_TYPE_BOOL:
-            bool bool_val = yyjson_get_bool(root);
-            INFOF("%s", bool_val ? "true" : "false");
+            bool_val = yyjson_get_bool(root);
+            INFOF("%d", bool_val);
             break;
 
         case YYJSON_TYPE_NUM:
             switch (subtyp)
             {
             case YYJSON_SUBTYPE_UINT:
-                uint64_t u64_val = yyjson_get_uint(root);
+                u64_val = yyjson_get_uint(root);
                 INFOF("%u", u64_val);
                 break;
 
             case YYJSON_SUBTYPE_SINT:
-                int64_t s64_val = yyjson_get_sint(root);
+                s64_val = yyjson_get_sint(root);
                 INFOF("%d", s64_val);
                 break;
 
             case YYJSON_SUBTYPE_REAL:
-                double f64_val = yyjson_get_real(root);
+                f64_val = yyjson_get_real(root);
                 INFOF("%f", f64_val);
                 break;
 
@@ -247,7 +260,7 @@ void iter_yyjson_doc_root(const yyjson_val *root)
             break;
 
         case YYJSON_TYPE_STR:
-            const char * str_val = yyjson_get_str(root);
+            str_val = yyjson_get_str(root);
             INFO(str_val);
             break;
 
