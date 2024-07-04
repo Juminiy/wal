@@ -14,8 +14,9 @@ void _init_callback(void )
 int main(int argc, char** argv, char** envp)
 {   
     // cowork_example();
+    // test_read_json_string();
 
-    test_read_json_string();
+    diff_prototype_ptr_cast();
 
     return 0;
 }
