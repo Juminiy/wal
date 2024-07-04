@@ -14,6 +14,10 @@ src_dir= src
 include_dir= include
 thirdparty_dir = thirdparty
 dst_objs= src/*.o thirdparty/yyjson/*.o
+exe_O= main
+
+all: clean build main 
+	./$(exe_O)
 
 build: ssrc yyjson
 	rm -rf $(build_dir) && mkdir -p $(build_dir)

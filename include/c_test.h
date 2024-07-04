@@ -13,6 +13,12 @@ struct test_type_b {
     int b;      // 4B
 };
 
+struct test_type_a_dup {
+    int fa;
+    float fb;
+};
+
 void diff_prototype_ptr_cast();
+void ptr_alloc_deref();
 
 #endif// #define C_TEST_H

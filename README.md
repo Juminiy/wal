@@ -28,3 +28,9 @@
 4. wal in coworker
 5. yyjson parse json to accelerate json parser
    1. yyjson read jsonstring not need to be escaping, only json format is ok
+   2. struct of binding, serialize, unserialize
+   3. easy search key: full_path, short_key, value
+   4. json flatten: full_path, short_key, array_value
+   5. TODO: how to switch tag to get type and value
+6. TODO: find a c lib of map any_val -> any_val
+7. all thirdparty library can be found on Github search by package name LIKE: uthash, yyjson

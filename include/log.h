@@ -25,7 +25,7 @@ int write_record_log_json(const char *, const char *);
 void write_log_example(void );
 
 #define DEFAULT_LOG_PATH "app.log"
-#define DEFAULT_LOG_BUF_LEN 64
+#define DEFAULT_LOG_BUF_LEN 1024 // 1K
 
 #define LOG_TYPE_DEBUG "debug"
 #define LOG_TYPE__INFO " info"
@@ -49,6 +49,11 @@ extern pthread_mutex_t log_mutex;
             free(app_buf); \
         } while(0)
 
+// lookup whether to eval the replacements
+/*
+    __TYPEOF__(file_name) file_name_eval = file_name; \
+    __TYPEOF__(type) type_eval = type; \
+*/
 #define ILOG_FMT(file_name, type, fmt, ...) \
         do { \
             char log_buf[DEFAULT_LOG_BUF_LEN]; \

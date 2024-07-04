@@ -13,11 +13,9 @@ void _init_callback(void )
 
 int main(int argc, char** argv, char** envp)
 {   
-    // cowork_example();
-    // test_read_json_string();
-
-    diff_prototype_ptr_cast();
-
+    // test_iter_json_file("data/json/multiple_embedded_26s.json");
+    
+    test_stu_map();
     return 0;
 }
 

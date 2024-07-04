@@ -90,7 +90,7 @@ int write_record_log_json
 
 void write_log_example(void )
 {
-    printf(
+    INFOF(
         "WAL State: %2d\n", 
         write_record_log("my_wal.log", "info, only test msg")
     );
