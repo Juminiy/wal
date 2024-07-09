@@ -27,17 +27,19 @@ struct key_rep {
 };
 
 sc_array_def(struct key_rep, key_rep);
+sc_array_def(int64_t, s64);
+sc_array_def(bool, bool);
 
 struct json_flatten {
     // {key_rep(32B char*), ...}
-    struct sc_array_key_rep key;
+    struct sc_array_key_rep *key;
     // map [key_rep.full_path] any_ptr
     // any_ptr is sc_array_type
     map_t data;                  
 };
 
 
-struct json_flatten * init_json_flatten();
+struct json_flatten * init_json_flatten(void );
 void free_json_flatten(struct json_flatten * );
 
 void iter_yyjson_doc_root(const yyjson_val * , const char * , struct json_flatten *);
@@ -47,5 +49,6 @@ void iter_yyjson_doc_arr(const yyjson_val * , const char * , struct json_flatten
 void iter_json_string(const char * );
 void iter_json_file(const char * );
 
+char* split_dot_get_last_val(const char * );
 
 #endif//#define JSON_FLATTEN_H

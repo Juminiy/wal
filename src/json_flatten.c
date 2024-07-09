@@ -38,6 +38,31 @@ void iter_json_file(const char * file_name)
     // free_json_flatten(jf);
 }  
 
+#define ASSIGN_HASHMAP_VALUE(value_arr, value_val, type_desc_gnuc99_desc) \
+        do { \
+            get_error_val = hashmap_get(jf->data, key_prefix, (any_t *)(&value_arr)); \
+            sc_array_add(value_arr, value_val); \
+            if (get_error_val == MAP_MISSING) { \
+                put_error_val = hashmap_put(jf->data, key_prefix, value_arr); \
+                struct key_rep key_of; \
+                key_of.full_path = key_prefix; \
+                key_of.short_path = split_dot_get_last_val(key_prefix); \
+                key_of.modify_path = key_of.short_path; \
+                key_of.type_desc_gnuc99 = type_desc_gnuc99_desc; \
+                sc_array_add(jf->key, key_of); \
+            } else { \
+                hashmap_put(jf->data, key_prefix, value_arr); \
+            } \
+        } while(0)
+
+#define INFOF_JSON_KV(value_fmt, value_val, value_typ) \
+        INFOF( \
+            "key = %s, value = %"#value_fmt", value_type = %s", \
+                key_prefix, \
+                value_val, \
+                value_typ \
+        )
+
 void iter_yyjson_doc_root(
     const yyjson_val *root, 
     const char *key_prefix, 
@@ -48,43 +73,47 @@ void iter_yyjson_doc_root(
         return;
     yyjson_type typ = yyjson_get_type(root);
     yyjson_subtype subtyp = yyjson_get_subtype(root);
-    // const char * typ_desc = yyjson_get_type_desc(root);
-    char * type_desc_gnuc99;
+    const char * typ_desc = yyjson_get_type_desc(root);
 
-    const char *raw_val;
-    bool bool_val;
-    uint64_t u64_val;
-    int64_t s64_val;
-    double f64_val;
-    const char *str_val;
+    const char *raw_val;    // str_arr as well
+    bool bool_val;          struct sc_array_bool *bool_arr = NULL;
+    uint64_t u64_val;       struct sc_array_64 *u64_arr = NULL; 
+    int64_t s64_val;        struct sc_array_s64 *s64_arr = NULL;
+    double f64_val;         struct sc_array_double *f64_arr = NULL;
+    const char *str_val;    struct sc_array_str *str_arr = NULL;
 
     if (typ >= 1 && typ <= 5)
     {
         // must be array of {NULL, bool, uint64_t, int64_t, double, char *}
         // must not be NULL
-        // any_ptr value_of = NULL; 
+        // any_ptr value_of = NULL;
+        // char * type_desc_gnuc99 = NULL;
+        int get_error_val = MAP_OK;
+        int put_error_val = MAP_OK;
         
         switch (typ)
     {
         // value type: RAW
         case YYJSON_TYPE_RAW:
             raw_val = yyjson_get_raw(root);
-            INFOF("key = %s, value = %s", key_prefix, raw_val);
-            // value_of = 
-            type_desc_gnuc99 = "char *";
+            INFOF_JSON_KV(s, raw_val, typ_desc);
+            MALLOC_OBJ(str_arr, struct sc_array_str);
+            sc_array_init(str_arr);
+            ASSIGN_HASHMAP_VALUE(str_arr, raw_val, "char *");
             break;
 
         // value type: NULL, ignore value of: NULL
         case YYJSON_TYPE_NULL:
-            INFOF("key = %s, value = %s", key_prefix, "null");
-            type_desc_gnuc99 = "NULL";
+            INFOF_JSON_KV(s, typ_desc, typ_desc);
             break;
 
         // value type: BOOL
         case YYJSON_TYPE_BOOL:
             bool_val = yyjson_get_bool(root);
-            INFOF("key = %s, value = %s", key_prefix, yyjson_get_type_desc(root));
-            type_desc_gnuc99 = "bool";
+            INFOF_JSON_KV(s, typ_desc, "bool");
+            MALLOC_OBJ(bool_arr, struct sc_array_bool);
+            sc_array_init(bool_arr); 
+            ASSIGN_HASHMAP_VALUE(bool_arr, bool_val, "bool");
             break;
 
         // value type: NUM
@@ -93,20 +122,26 @@ void iter_yyjson_doc_root(
             {
             case YYJSON_SUBTYPE_UINT:
                 u64_val = yyjson_get_uint(root);
-                INFOF("key = %s, value = %lu", key_prefix, u64_val);
-                type_desc_gnuc99 = "uint64_t";
+                INFOF_JSON_KV(lu, u64_val, "uint64_t");
+                MALLOC_OBJ(u64_arr, struct sc_array_64);
+                sc_array_init(u64_arr); 
+                ASSIGN_HASHMAP_VALUE(u64_arr, u64_val, "uint64_t");
                 break;
 
             case YYJSON_SUBTYPE_SINT:
                 s64_val = yyjson_get_sint(root);
-                INFOF("key = %s, value = %ld", key_prefix, s64_val);
-                type_desc_gnuc99 = "int64_t";
+                INFOF_JSON_KV(lu, s64_val, "int64_t");
+                MALLOC_OBJ(s64_arr, struct sc_array_s64);
+                sc_array_init(s64_arr); 
+                ASSIGN_HASHMAP_VALUE(s64_arr, s64_val, "int64_t");
                 break;
 
             case YYJSON_SUBTYPE_REAL:
                 f64_val = yyjson_get_real(root);
-                INFOF("key = %s, value = %f", key_prefix, f64_val);
-                type_desc_gnuc99 = "double";
+                INFOF_JSON_KV(f, s64_val, "double");
+                MALLOC_OBJ(f64_arr, struct sc_array_double);
+                sc_array_init(f64_arr); 
+                ASSIGN_HASHMAP_VALUE(f64_arr, f64_val, "double");
                 break;
 
             default:
@@ -117,18 +152,12 @@ void iter_yyjson_doc_root(
         // value_type: STR
         case YYJSON_TYPE_STR:
             str_val = yyjson_get_str(root);
-            INFOF("key = %s, value = %s", key_prefix, str_val);
-            type_desc_gnuc99 = "char *";
+            INFOF_JSON_KV(s, raw_val, typ_desc);
+            MALLOC_OBJ(str_arr, struct sc_array_str);
+            sc_array_init(str_arr);
+            ASSIGN_HASHMAP_VALUE(str_arr, raw_val, "char *");
             break;
     }
-        // int error_val = hashmap_get(jf->data, key_prefix, (void**)(&value_of));
-        // if (error_val == MAP_MISSING) {
-        //     // alloc array of value by type(typ)
-        //     hashmap_put(jf->data, key_prefix, value_of);
-        //     sc_array_add(&(jf->key), );
-        // } else {
-            
-        // }
     }
     else
     {
@@ -192,11 +221,12 @@ void iter_yyjson_doc_obj(
     }
 }
 
-struct json_flatten * init_json_flatten()
+struct json_flatten * init_json_flatten(void )
 {
     struct json_flatten *jf = NULL;
     MALLOC_OBJ(jf, struct json_flatten);
-    sc_array_init(&(jf->key));
+    MALLOC_OBJ(jf->key, struct sc_array_key_rep);
+    sc_array_init(jf->key);
     jf->data = hashmap_new();
 }
 
@@ -208,9 +238,19 @@ void free_json_flatten(struct json_flatten * jf)
 
     // free key 
         // free key 4 field of buffer(char*)
-    sc_array_term(&(jf->key));
+    sc_array_term(jf->key);
 
     // free self
-    free(jf);   
-    jf = NULL;
+    free(jf);
+}
+
+// no copy
+// get_short_path_by_full_path
+// NULL
+// a
+// a.b
+// a.b.c.d.e
+char* split_dot_get_last_val(const char * full_path)
+{
+    return strrchr(full_path, '.') + 1;
 }

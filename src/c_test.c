@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 
-void diff_prototype_ptr_cast()
+void diff_prototype_ptr_cast(void )
 {                                                                           // ieee754 underlying_repsentation
     struct test_type_a a_val = {5, 1.25};                                   // 40a00000 3fa00000
     struct test_type_b b_val = {1, 0};
@@ -22,7 +22,7 @@ void diff_prototype_ptr_cast()
    
 }
 
-void ptr_alloc_deref()
+void ptr_alloc_deref(void )
 {
     const size_t arr2d_sz = 8, arr1d_sz = 8;
     int ** arr2d_ptr = NULL;

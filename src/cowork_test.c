@@ -77,7 +77,7 @@ void cowork_example(void )
     tasks_res_free(tres, tasks_size);
 }
 
-struct test_retval* make_faked_retval()
+struct test_retval* make_faked_retval(void )
 {
     srand((unsigned int)time(NULL));
     struct test_retval* val = (struct test_retval*)malloc(sizeof(struct test_retval));

@@ -20,7 +20,7 @@ typedef struct data_struct_s
     int number;
 } data_struct_t;
 
-int test_c_hashmap()
+int test_c_hashmap(void )
 {
     int index;
     int error;

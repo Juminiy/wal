@@ -19,7 +19,7 @@ exe_O= main
 all: clean build main 
 	./$(exe_O)
 
-build: ssrc yyjson
+build: ssrc yyjson c_hashmap
 	rm -rf $(build_dir) && mkdir -p $(build_dir)
 	cp $(dst_objs) $(build_dir)
 

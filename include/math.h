@@ -8,4 +8,3 @@
 double f64_arr_avg(const double* , size_t );
 
 #endif//#define MATH_H
-

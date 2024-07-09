@@ -9,12 +9,13 @@
 > MTS: multiple threads safe
 1. log
    1. macro log type: info, warn, error, debug, fatal
-   2. TODO: fmt log msg length is restricted
+   2. SAFE: fmt log msg length is restricted
    3. BUG: msg truncated and overflow
       1. (buffer BUG in windows msys2 BUG, not mine)
       2. MacOS-Arm64 and Ubuntu-Amd64 is OK
+      3. has been solved
    4. TODO: enable color
-   5. hasDone: ILOG MTS
+   5. hasDone: ILOG, MTS, Buffer Not Safe
 2. coworker
    1. concurrency in multithreads
    2. sync, async, time record
@@ -33,4 +34,5 @@
    4. json flatten: full_path, short_key, array_value
    5. TODO: how to switch tag to get type and value
 6. TODO: find a c lib of map any_val -> any_val
-7. all thirdparty library can be found on Github search by package name LIKE: uthash, yyjson
+7. all thirdparty library can be found on Github search by package name LIKE: uthash, yyjson, c_hashmap
+8. TODO: micorsoft/mimalloc

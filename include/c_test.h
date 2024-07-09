@@ -18,8 +18,8 @@ struct test_type_a_dup {
     float fb;
 };
 
-void diff_prototype_ptr_cast();
-void ptr_alloc_deref();
-int test_c_hashmap();
+void diff_prototype_ptr_cast(void );
+void ptr_alloc_deref(void );
+int test_c_hashmap(void );
 
 #endif// #define C_TEST_H
