@@ -6,37 +6,27 @@
 // definition log_mutex
 pthread_mutex_t log_mutex;
 
-// void ilog(const char *file_name, const char *type, char *msg)
-// {
-//     char *app_buf = (char*)(malloc(5 + strlen(msg)));
-//     strncpy(app_buf, type, 5);
-//     strncpy(app_buf + 5, msg, strlen(msg));
-//     pthread_mutex_lock(&log_mutex);
-//     write_record_log(file_name, app_buf);
-//     pthread_mutex_unlock(&log_mutex);
-//     free(app_buf);
-// }
-
-
 // must be free after used
 char* get_time_now_str(void )
 {
     struct timeval timev;
     gettimeofday(&timev, NULL);
     time_t timep = timev.tv_sec;
-    struct tm *timeg = gmtime(&timep);
+    // struct tm *timeg = gmtime(&timep); // UTC
+    struct tm *timel = localtime(&timep); // CST
 
-    char *tm_buf = (char*)(malloc(32 * sizeof(char)));
+    char *tm_buf = NULL;
+    MALLOC_STR(tm_buf, 32);
     snprintf(
         tm_buf, 
         24, 
         "%04d-%02d-%02d %02d:%02d:%02d-%03ld", 
-        timeg->tm_year + 1900, // 2024
-        timeg->tm_mon + 1,     // 07
-        timeg->tm_mday,        // 01
-        timeg->tm_hour,        // 10
-        timeg->tm_min,         // 25
-        timeg->tm_sec,         // 09
+        timel->tm_year + 1900, // 2024
+        timel->tm_mon + 1,     // 07
+        timel->tm_mday,        // 01
+        timel->tm_hour,        // 10
+        timel->tm_min,         // 25
+        timel->tm_sec,         // 09
         timev.tv_usec / 1000   // 315
     );
 

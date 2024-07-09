@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <pthread.h>
 
+#include "utils.h"
+
 #define FSYNC_ERR_CODE -1
 #define FSYNC_ERR_MSG "fsync error"
 
@@ -40,9 +42,8 @@ extern pthread_mutex_t log_mutex;
 
 #define ILOG(file_name, type, msg) \
         do { \
-            char *app_buf = (char*)(malloc(5 + strlen(msg))); \
-            strncpy(app_buf, type, 5); \
-            strncpy(app_buf + 5, msg, strlen(msg)); \
+            char *app_buf = NULL; \
+            STR2CAT(app_buf, type, msg); \
             pthread_mutex_lock(&log_mutex); \
             write_record_log(file_name, app_buf); \
             pthread_mutex_unlock(&log_mutex); \
@@ -56,6 +57,7 @@ extern pthread_mutex_t log_mutex;
 */
 #define ILOG_FMT(file_name, type, fmt, ...) \
         do { \
+        /*clear buffer cache*/ \
             char log_buf[DEFAULT_LOG_BUF_LEN]; \
             int sz = snprintf(log_buf, DEFAULT_LOG_BUF_LEN, fmt, __VA_ARGS__); \
             if (sz == -1) { \
@@ -91,7 +93,9 @@ extern pthread_mutex_t log_mutex;
         do { \
             char log_buf[DEFAULT_LOG_BUF_LEN]; \
             int sz = snprintf(log_buf, DEFAULT_LOG_BUF_LEN, fmt, __VA_ARGS__); \
-            log_buf[sz] = 0; \
+            if (sz == -1) { \
+                perror("need to alloc more"); \
+            } \
             char * time_buf = get_time_now_str(); \
             printf("type [%s], time [%s], msg [%s]\n", type, time_buf, log_buf); \
             free(time_buf); \

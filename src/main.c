@@ -2,8 +2,7 @@
 #include "../include/cowork.h"
 #include "../include/utils.h"
 
-#include "../include/cowork_test.h"
-#include "../include/json_test.h"
+#include "../include/json_flatten.h"
 
 __attribute__((constructor))
 void _init_callback(void )
@@ -13,10 +12,8 @@ void _init_callback(void )
 
 int main(int argc, char** argv, char** envp)
 {   
-    // test_iter_json_file("data/json/multiple_embedded_26s.json");
-    
-    // test_stu_map();
-    INFO("stop use uthash.h");
+    iter_json_file("data/json/multiple_embedded_26s.json");
+
     return 0;
 }
 

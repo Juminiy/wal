@@ -20,5 +20,6 @@ struct test_type_a_dup {
 
 void diff_prototype_ptr_cast();
 void ptr_alloc_deref();
+int test_c_hashmap();
 
 #endif// #define C_TEST_H

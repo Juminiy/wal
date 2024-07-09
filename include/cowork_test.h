@@ -26,7 +26,7 @@ any_ptr test_fn5(any_ptr _ptr);
 #define decl_test_fnx(xid, xms, fncall) \
         any_ptr test_fn##xid(any_ptr _ptr) \
         { \
-            INFOF("thread id: %u", pthread_self()); \
+            INFOF("thread id: %lu", pthread_self()); \
             INFOF("start tid: %02d", xid); \
             any_ptr val = fncall(xms); \
             struct tasks_sync* state = (struct tasks_sync*)(_ptr); \

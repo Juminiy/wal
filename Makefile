@@ -13,7 +13,7 @@ build_dir= build
 src_dir= src
 include_dir= include
 thirdparty_dir = thirdparty
-dst_objs= src/*.o thirdparty/yyjson/*.o
+dst_objs= src/*.o thirdparty/yyjson/*.o thirdparty/c_hashmap/*.o
 exe_O= main
 
 all: clean build main 
@@ -28,6 +28,9 @@ ssrc:
 
 yyjson:
 	$(MAKE) -C thirdparty/yyjson
+
+c_hashmap:
+	$(MAKE) -C thirdparty/c_hashmap
 
 main: $(build_dir)/*.o
 	$(CC) $(c_args) -o $@ $^

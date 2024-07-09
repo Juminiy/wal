@@ -24,18 +24,18 @@ void test_read_json_string_sample_code(void )
     // Get root["name"]
     yyjson_val *name = yyjson_obj_get(root, "name");
     INFOF("name: %s", yyjson_get_str(name));
-    INFOF("name length:%d", (int)yyjson_get_len(name));
+    INFOF("name length:%lu", yyjson_get_len(name));
 
     // Get root["star"]
     yyjson_val *star = yyjson_obj_get(root, "star");
-    INFOF("star: %d", (int)yyjson_get_int(star));
+    INFOF("star: %d", yyjson_get_int(star));
 
     // Get root["hits"], iterate over the array
     yyjson_val *hits = yyjson_obj_get(root, "hits");
     size_t idx, max;
     yyjson_val *hit;
     yyjson_arr_foreach(hits, idx, max, hit) {
-        INFOF("hit%d: %d", (int)idx, (int)yyjson_get_int(hit));
+        INFOF("hit%lu: %d", idx, yyjson_get_int(hit));
     }
 
     // Free the doc
@@ -44,7 +44,7 @@ void test_read_json_string_sample_code(void )
 
 void test_read_json_string(void )
 {   
-    char *jstr;
+    char *jstr = NULL;
     READ_FILE_BUF("data/text/github_api_users.txt", "r", jstr);
     INFO("get file buffer"); 
     // INFO(jstr);
@@ -147,7 +147,7 @@ void test_read_json_file(void )
     }
 
     yyjson_val *root = yyjson_doc_get_root(doc);
-    iter_yyjson_doc_root(root);
+    // iter_yyjson_doc_root(root);
 
     free(doc);
 }   
@@ -186,117 +186,4 @@ void test_write_json_file_sample_code(void )
 void test_write_json_file(void )
 {
 
-}
-
-void test_iter_json_file(const char * file_name)
-{
-    yyjson_read_flag flg = YYJSON_READ_ALLOW_COMMENTS | YYJSON_READ_ALLOW_TRAILING_COMMAS;
-    yyjson_read_err err;
-    yyjson_doc *doc = yyjson_read_file(file_name, flg, NULL, &err);
-
-    if(!doc){
-        ERRORF("read error (%u): %s at position: %ld", err.code, err.msg, err.pos);
-        return;
-    }
-
-    yyjson_val *root = yyjson_doc_get_root(doc);
-    iter_yyjson_doc_root(root);
-
-    free(doc);
-}  
-
-void iter_yyjson_doc_root(const yyjson_val *root)
-{
-    if(root == NULL)
-        return;
-    yyjson_type typ = yyjson_get_type(root);
-    yyjson_subtype subtyp = yyjson_get_subtype(root);
-
-    const char *raw_val;
-    bool bool_val;
-    uint64_t u64_val;
-    int64_t s64_val;
-    double f64_val;
-    const char *str_val;
-
-    switch(typ)
-    {
-        // meta value type: RAW, NULL, BOOL, NUM, STR
-        case YYJSON_TYPE_RAW:
-            raw_val = yyjson_get_raw(root);
-            INFO(raw_val);
-            break;
-
-        case YYJSON_TYPE_NULL:
-            INFO("null");
-            break;
-
-        case YYJSON_TYPE_BOOL:
-            bool_val = yyjson_get_bool(root);
-            INFOF("%d", bool_val);
-            break;
-
-        case YYJSON_TYPE_NUM:
-            switch (subtyp)
-            {
-            case YYJSON_SUBTYPE_UINT:
-                u64_val = yyjson_get_uint(root);
-                INFOF("%u", u64_val);
-                break;
-
-            case YYJSON_SUBTYPE_SINT:
-                s64_val = yyjson_get_sint(root);
-                INFOF("%d", s64_val);
-                break;
-
-            case YYJSON_SUBTYPE_REAL:
-                f64_val = yyjson_get_real(root);
-                INFOF("%f", f64_val);
-                break;
-
-            default:
-                ERRORL(UNKNOWN_JSON_SUB_TYPE);
-            }
-            break;
-
-        case YYJSON_TYPE_STR:
-            str_val = yyjson_get_str(root);
-            INFO(str_val);
-            break;
-
-        // union iterable type: ARR, OBJ
-        case YYJSON_TYPE_ARR:
-            iter_yyjson_doc_arr(root);
-            break;
-        
-        case YYJSON_TYPE_OBJ:
-            iter_yyjson_doc_obj(root);
-            break;
-
-        default:
-            ERRORL(UNKNOWN_JSON_TYPE);
-    }
-
-}
-
-void iter_yyjson_doc_obj(const yyjson_val* obj)
-{
-    yyjson_obj_iter iter;
-    yyjson_obj_iter_init(obj, &iter);
-    yyjson_val *key, *val;
-    while ((key = yyjson_obj_iter_next(&iter))) {
-        val = yyjson_obj_iter_get_val(key);
-        iter_yyjson_doc_root(val);
-    }
-}
-
-void iter_yyjson_doc_arr(const yyjson_val* arr)
-{
-    size_t idx_i, max_m;
-    yyjson_val *obj;
-    yyjson_arr_iter iter;
-    yyjson_arr_iter_init(arr, &iter);
-    while((obj = yyjson_arr_iter_next(&iter))) {
-        iter_yyjson_doc_root(obj);
-    }
 }
