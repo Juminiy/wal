@@ -4,11 +4,18 @@
 #define UTILS_H
 
 #include <assert.h>
+#include <ctype.h>
+#include <errno.h>
+#include <float.h>
+#include <limits.h>
+#include <stdarg.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <stddef.h>
 
 #if defined(__GNUC__) || \
     defined(__clang__) || \
@@ -87,28 +94,26 @@ char* get_time_now_str(void );
 // val has declared to NULL or assigned to NULL
 #define MALLOC_ARR(val, typ, n) \
         do { \
-            free(val); \
-            val = (typ*) malloc(sizeof(typ) * n); \
+            val = (typ*) malloc(sizeof(typ) * (n)); \
             assert(val); \
         } while(0)
 
 // val has declared to NULL or assigned to NULL
 #define MALLOC_OBJ(val, typ) \
         do { \
-            free(val); \
-            val = (typ*) malloc(sizeof(typ) * 1); \
+            val = (typ*) malloc(sizeof(typ)); \
             assert(val); \
         } while(0)
 
 // str has declared to NULL or assigned to NULL
 #define MALLOC_STR(str, n) \
-        MALLOC_ARR(str, char, n+1); \
+        MALLOC_ARR(str, char, (n+1)); \
         str[n] = '\0'
 
 #define STR2CAT(dest0, src0, src1) \
         size_t src0_sz = strlen(src0); \
         size_t src1_sz = strlen(src1); \
-        MALLOC_STR(dest0, src0_sz + src1_sz); \
+        MALLOC_STR(dest0, (src0_sz + src1_sz) ); \
         strncpy(dest0, src0, src0_sz); \
         strncpy(dest0 + src0_sz, src1, src1_sz)
 
@@ -116,7 +121,7 @@ char* get_time_now_str(void );
         size_t src0_sz = strlen(src0); \
         size_t src1_sz = strlen(src1); \
         size_t src2_sz = strlen(src2); \
-        MALLOC_STR(dest0, src0_sz + src1_sz + src2_sz); \
+        MALLOC_STR(dest0, (src0_sz + src1_sz + src2_sz) ); \
         strncpy(dest0, src0, src0_sz); \
         strncpy(dest0 + src0_sz, src1, src1_sz); \
         strncpy(dest0 + src0_sz + src1_sz, src2, src2_sz)

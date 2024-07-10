@@ -6,9 +6,7 @@
 #include "utils.h"
 
 #include <pthread.h>
-#include <stdio.h>
 #include <unistd.h>
-#include <stdbool.h>
 
 #define err_task_id -1
 

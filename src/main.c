@@ -3,6 +3,7 @@
 #include "../include/utils.h"
 
 #include "../include/json_flatten.h"
+#include "../include/c_test.h"
 
 __attribute__((constructor))
 void _init_callback(void )
@@ -13,6 +14,7 @@ void _init_callback(void )
 int main(int argc, char** argv, char** envp)
 {   
     iter_json_file("data/json/multiple_embedded_26s.json");
+    // test_map_example();
 
     return 0;
 }

@@ -21,5 +21,8 @@ struct test_type_a_dup {
 void diff_prototype_ptr_cast(void );
 void ptr_alloc_deref(void );
 int test_c_hashmap(void );
+void test_std_funcs(void );
+void test_map_example(void );
+void test_map_full_of_all(void );
 
 #endif// #define C_TEST_H

@@ -3,15 +3,6 @@
 
 #include "../include/json_test.h"
 
-#include <stdlib.h>
-#include <string.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <limits.h>
-#include <float.h>
-#include <stdint.h>
 
 void test_read_json_string_sample_code(void )
 {

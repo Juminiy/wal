@@ -4,7 +4,6 @@
 #define JSON_TEST_H
 
 #include "../thirdparty/yyjson/yyjson.h" 
-#include "../thirdparty/c_hashmap/hashmap.h"
 #include "../thirdparty/sc/array/sc_array.h"
 
 void test_read_json_string_sample_code(void );

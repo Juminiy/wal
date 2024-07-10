@@ -1,9 +1,6 @@
 // rubbished lib
 #include "../thirdparty/uthash/uthash.h"
 
-#include <stddef.h>
-#include <stdbool.h>
-
 struct stu_info {
     int id;
     int age;

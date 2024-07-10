@@ -34,5 +34,20 @@
    4. json flatten: full_path, short_key, array_value
    5. TODO: how to switch tag to get type and value
 6. TODO: find a c lib of map any_val -> any_val
-7. all thirdparty library can be found on Github search by package name LIKE: uthash, yyjson, c_hashmap
+7. all thirdparty library can be found on Github search by package name LIKE: yyjson
 8. TODO: micorsoft/mimalloc
+9. report BUG of opensource lib: uthash, c_hashmap
+10. anyway: the API design is:
+    1.  Go Server Loading a plugin of gnuc99 target .o file called plugin_json_flatten.
+    2.  go program send a original json binary bytestream to plugin_json_flatten.
+    3.  gnuc99 parse and flatten json to new json format, write a new json to a new bytestream.
+    4.  go receive a flatten json binary bytestream to parse it use predefined format in go.
+    5.  now go only to recycle garbage of original bytestream and new bytestream and new struct of.
+11. internal:
+    1.  use sc_map to store string to array of value by map[char*]void* -> void* reinterpret to array of real value.
+    2.  ~~use bidirectional linked list to store the order of key.~~
+    3.  map[char*]void* to map full_path -> void* reinterpret to {uint64_t tag; void * arr;}
+    4.  write back to json_string use of mut_json
+    5.  receive from Go bytestream to char *
+    6.  send char * to Go bytestream
+    7.  free gnuc99 alloc to use mimalloc

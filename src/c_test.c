@@ -43,3 +43,49 @@ void ptr_alloc_deref(void )
     free(arr2d_ptr);
 
 }
+
+#define test_stdio_sscanf() \
+        do  { \
+            uint64_t u64_val; \
+            int64_t s64_val; \
+            long double f80_val; \
+            char str_val[16]; \
+            bool bool_val; \
+            sscanf( \
+                "66, -88, 99.085, k8sio, 1", \
+                "%llu, %lld, %Lf, %s, %hhu", \
+                &u64_val, \
+                &s64_val, \
+                &f80_val, \
+                str_val, \
+                &bool_val \
+            ); \
+            INFOF( \
+                "%llu, %lld, %Lf, %s %s", \
+                u64_val, \
+                s64_val, \
+                f80_val, \
+                str_val, \
+                (bool_val ? "true" : "false") \
+            ); \
+        } while(0)
+
+#define test_sys_env() \
+        do { \
+            char * path_var = getenv("PATH"); \
+            if (path_var) \
+                INFO(path_var); \
+            path_var = getenv("GOPATH"); \
+            if(path_var) \
+                INFO(path_var); \
+            system("ps -aux | grep \"docker\""); \
+        } while(0)
+
+void test_std_funcs(void )
+{
+    // test_stdio_sscanf();
+    // test_sys_env();
+    INFOF("%lld, %lld", INT_MAX, INT_MIN);  
+    INFOF("%llu, %llu", UINT_MAX, 0);
+    
+}

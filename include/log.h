@@ -3,15 +3,13 @@
 #ifndef LOG_H
 #define LOG_H
 
-#include <stdio.h>
+#include "utils.h"
+
+#include <pthread.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <time.h>
-#include <string.h>
-#include <stdlib.h>
-#include <pthread.h>
 
-#include "utils.h"
 
 #define FSYNC_ERR_CODE -1
 #define FSYNC_ERR_MSG "fsync error"
@@ -27,7 +25,7 @@ int write_record_log_json(const char *, const char *);
 void write_log_example(void );
 
 #define DEFAULT_LOG_PATH "app.log"
-#define DEFAULT_LOG_BUF_LEN 1024 // 1K
+#define DEFAULT_LOG_BUF_LEN BUFSIZ // 8K
 
 #define LOG_TYPE_DEBUG "debug"
 #define LOG_TYPE__INFO " info"
@@ -57,7 +55,6 @@ extern pthread_mutex_t log_mutex;
 */
 #define ILOG_FMT(file_name, type, fmt, ...) \
         do { \
-        /*clear buffer cache*/ \
             char log_buf[DEFAULT_LOG_BUF_LEN]; \
             int sz = snprintf(log_buf, DEFAULT_LOG_BUF_LEN, fmt, __VA_ARGS__); \
             if (sz == -1) { \

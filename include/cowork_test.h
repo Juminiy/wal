@@ -5,7 +5,6 @@
 
 #include "utils.h"
 #include "cowork.h"
-#include "stdlib.h"
 
 any_ptr test_fn0(any_ptr _ptr);
 any_ptr test_fn1(any_ptr _ptr);
