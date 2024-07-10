@@ -8,6 +8,7 @@
 
 *.zip
 
+100MB.json
 main
 *.stackdump
 

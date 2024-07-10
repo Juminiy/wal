@@ -158,4 +158,4 @@ char* get_time_now_str(void );
             fclose(tfile); \
         } while(0)
 
-#endif// #define UTILS_H
+#endif//#define UTILS_H

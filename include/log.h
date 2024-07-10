@@ -100,4 +100,4 @@ extern pthread_mutex_t log_mutex;
 
 void log_log_example(void );
 
-#endif// #define LOG_H
+#endif//#define LOG_H

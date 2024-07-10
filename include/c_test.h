@@ -25,4 +25,4 @@ void test_std_funcs(void );
 void test_map_example(void );
 void test_map_full_of_all(void );
 
-#endif// #define C_TEST_H
+#endif//#define C_TEST_H

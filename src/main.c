@@ -13,8 +13,9 @@ void _init_callback(void )
 
 int main(int argc, char** argv, char** envp)
 {   
-    iter_json_file("data/json/multiple_embedded_26s.json");
-    // test_map_example();
+    INFO("start");
+    iter_json_file("data/json/100MB.json");
+    INFO("end");
 
     return 0;
 }

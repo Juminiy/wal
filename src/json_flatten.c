@@ -24,10 +24,11 @@ void iter_json_file(const char * file_name)
     struct json_flatten * jf = init_json_flatten();
     iter_yyjson_doc_root(root, "", jf);
     
-    iter_json_flatten(jf);
+    // iter_json_flatten(jf);
 
-    free(doc);
     free_json_flatten(jf);
+    free(doc);
+
 }  
 
 void iter_yyjson_doc_root(
@@ -215,22 +216,22 @@ char* split_dot_get_last_val(const char * full_path)
 
 void iter_json_flatten(struct json_flatten * jf)
 {
-    INFO("json_flatten key_rep");
+    // INFO("json_flatten key_rep");
     struct key_rep key_rep_of;
     sc_array_foreach(jf->key, key_rep_of) {
-        INFOF(
-            "%s, %s, %s", 
-            key_rep_of.full_path, 
-            key_rep_of.short_path, 
-            key_rep_of.type_desc_gnuc99
-        );
+        // INFOF(
+        //     "%s, %s, %s", 
+        //     key_rep_of.full_path, 
+        //     key_rep_of.short_path, 
+        //     key_rep_of.type_desc_gnuc99
+        // );
     }
 
     char * map_key_of;
     any_ptr map_value_of;
-    INFO("json_flatten data_rep");
+    // INFO("json_flatten data_rep");
     sc_map_foreach(jf->map, map_key_of, map_value_of) {
-        INFOF("key: [%s], addr: [%p]", map_key_of, map_value_of);
+        // INFOF("key: [%s], addr: [%p]", map_key_of, map_value_of);
         struct val_rep * val_of = (struct val_rep *)(map_value_of);
         yyjson_type typ = UNSAFE_YYJSON_GET_TYPE(val_of->tag);
         yyjson_subtype subtyp = UNSAFE_YYJSON_GET_SUBTYPE(val_of->tag);
@@ -242,20 +243,20 @@ void iter_json_flatten(struct json_flatten * jf)
         double f64_val;         struct sc_array_double *f64_arr = NULL;
         const char *str_val;    struct sc_array_str *str_arr = NULL;
 
-        INFOF("addr: [%p] start", map_value_of);
+        // INFOF("addr: [%p] start", map_value_of);
         switch (typ)
         {
         case YYJSON_TYPE_RAW:
             raw_arr = (struct sc_array_str *)(val_of->arr);
             sc_array_foreach(raw_arr, raw_val) {
-                INFOF("%s", raw_val);
+                // INFOF("%s", raw_val);
             }
             break;
         
         case YYJSON_TYPE_BOOL:
             bool_arr = (struct sc_array_bool *)(val_of->arr);
             sc_array_foreach(bool_arr, bool_val) {
-                INFOF("%s", (bool_val ? "true" : "false"));
+                // INFOF("%s", (bool_val ? "true" : "false"));
             }
             break;
 
@@ -265,21 +266,21 @@ void iter_json_flatten(struct json_flatten * jf)
             case YYJSON_SUBTYPE_UINT:
                 u64_arr = (struct sc_array_64 *)(val_of->arr);
                 sc_array_foreach(u64_arr, u64_val) {
-                    INFOF("%llu", u64_val);
+                    // INFOF("%llu", u64_val);
                 }
                 break;
 
             case YYJSON_SUBTYPE_SINT:
                 s64_arr = (struct sc_array_s64 *)(val_of->arr);
                 sc_array_foreach(s64_arr, s64_val) {
-                    INFOF("%lld", s64_val);
+                    // INFOF("%lld", s64_val);
                 }
                 break;
 
             case YYJSON_SUBTYPE_REAL:
                 f64_arr = (struct sc_array_double *)(val_of->arr);
                 sc_array_foreach(f64_arr, f64_val) {
-                    INFOF("%f", f64_val);
+                    // INFOF("%f", f64_val);
                 }
                 break;
             }
@@ -288,12 +289,12 @@ void iter_json_flatten(struct json_flatten * jf)
         case YYJSON_TYPE_STR:
             str_arr = (struct sc_array_str *)(val_of->arr);
             sc_array_foreach(str_arr, str_val) {
-                INFOF("%s", str_val);
+                // INFOF("%s", str_val);
             }
             break;
         
         }
-        INFOF("addr: [%p] end", map_value_of);
+        // INFOF("addr: [%p] end", map_value_of);
 
     }
 

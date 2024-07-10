@@ -1,4 +1,4 @@
-#pragma JSON_TEST_H
+#pragma once
 
 #ifndef JSON_TEST_H
 #define JSON_TEST_H

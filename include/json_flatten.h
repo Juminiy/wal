@@ -1,4 +1,4 @@
-#pragma JSON_FLATTEN_H
+#pragma once
 
 #ifndef JSON_FLATTEN_H
 #define JSON_FLATTEN_H
