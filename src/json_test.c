@@ -84,9 +84,15 @@ void test_write_json_string_sample_code(void )
     int hits_arr[] = {2, 2, 1, 3};
     yyjson_mut_val *hits = yyjson_mut_arr_with_sint32(doc, hits_arr, 4);
     yyjson_mut_obj_add_val(doc, root, "hits", hits);
-
+    yyjson_mut_val *obj0 = yyjson_mut_obj(doc); yyjson_mut_obj_add_val(doc, root, "obj0", obj0);
+    yyjson_mut_val *obj01 = yyjson_mut_obj(doc); yyjson_mut_obj_add_val(doc, obj0, "obj01", obj01);
+    double f64_arr[] = {11.22, 33.44, 55.66};
+    yyjson_mut_val *obj02 = yyjson_mut_arr_with_double(doc, f64_arr, ARR_SZ(f64_arr)); yyjson_mut_obj_add_val(doc, obj0, "obj02", obj02);
+    
+    
+    
     // To string, minified
-    const char *json = yyjson_mut_write(doc, 0, NULL);
+    const char *json = yyjson_mut_write(doc, YYJSON_WRITE_PRETTY, NULL);
     if (json) {
         INFOF("json: %s", json); // {"name":"Mash","star":4,"hits":[2,2,1,3]}
         free((void *)json);
@@ -107,47 +113,53 @@ void test_write_json_string_sample_code(void )
 void test_write_json_string(void )
 {
     bool ok = true; 
-    #define IFOK(ok_val) if(!ok_val) INFOF("%d", __LINE__)
+    #define IFOK(val) if(!val) INFOF("%d", __LINE__)
 
-    yyjson_mut_doc *doc = yyjson_mut_doc_new(NULL); IFOK(doc);
-    yyjson_mut_val *root = yyjson_mut_obj(doc);     IFOK(root);
+    // alloc ok
+    yyjson_mut_doc *doc = yyjson_mut_doc_new(NULL); //IFOK(doc);
+    yyjson_mut_val *root = yyjson_mut_obj(doc); //IFOK(root);
     yyjson_mut_doc_set_root(doc, root);
     
-    yyjson_mut_val *data = yyjson_mut_obj(doc);  IFOK(data);
-    ok = yyjson_mut_obj_add_val(doc, root, "data", data); IFOK(ok);
-    yyjson_mut_val *key = yyjson_mut_arr(doc);  IFOK(key);
-    ok = yyjson_mut_obj_add_val(doc, root, "key", key); IFOK(ok);
+    yyjson_mut_val *data = yyjson_mut_obj(doc); //IFOK(data);
+    ok = yyjson_mut_obj_add_val(doc, root, "data", data); //IFOK(ok);
+    yyjson_mut_val *key = yyjson_mut_arr(doc); //IFOK(key);
+    ok = yyjson_mut_obj_add_val(doc, root, "key", key); //IFOK(ok);
 
-
+    // declare ok
     uint64_t u64_arr[] = {111, 222, 333};                    
     double f64_arr[] = {11.22, 33.44, 55.66, 77.88};            
     char   *str_arr[] = {"Java", "Python", "Go", "C++", "C"};    
     int str_arr_sz[] = {4, 6, 2, 3, 1};
 
-    yyjson_mut_val *data_key_full0 = yyjson_mut_arr_with_uint64(doc, u64_arr, ARR_SZ(u64_arr));   IFOK(data_key_full0);
-    ok = yyjson_mut_obj_add_val(doc, data, "key_full0", data_key_full0); IFOK(ok);
-    yyjson_mut_val *data_key_full1 = yyjson_mut_arr_with_double(doc, f64_arr, ARR_SZ(f64_arr));   IFOK(data_key_full1);
-    ok = yyjson_mut_obj_add_val(doc, data, "key_full1", data_key_full1); IFOK(ok);
-    yyjson_mut_val *data_key_full2 = yyjson_mut_arr_with_strn(doc, str_arr, str_arr_sz, ARR_SZ(str_arr)); IFOK(data_key_full2);
-    ok = yyjson_mut_obj_add_val(doc, data, "key_full2", data_key_full2); IFOK(ok);
+    // write ok
+    yyjson_mut_val *data_key_full0 = yyjson_mut_arr_with_uint64(doc, u64_arr, ARR_SZ(u64_arr));   
+    ok = yyjson_mut_obj_add_val(doc, data, "key_full0", data_key_full0); 
+
+    yyjson_mut_val *data_key_full1 = yyjson_mut_arr_with_double(doc, f64_arr, ARR_SZ(f64_arr));   
+    ok = yyjson_mut_obj_add_val(doc, data, "key_full1", data_key_full1); 
+
+    // problem occur!
+    yyjson_mut_val *data_key_full2 = yyjson_mut_arr_with_str(doc, str_arr, ARR_SZ(str_arr));
+    ok = yyjson_mut_obj_add_val(doc, data, "key_full2", data_key_full2); 
     
 
-    yyjson_mut_val *key0 = yyjson_mut_obj(doc); ok = yyjson_mut_arr_append(key, key0); IFOK(ok);
-    yyjson_mut_val *key1 = yyjson_mut_obj(doc); ok = yyjson_mut_arr_append(key, key1); IFOK(ok);
-    yyjson_mut_val *key2 = yyjson_mut_obj(doc); ok = yyjson_mut_arr_append(key, key2); IFOK(ok);
+    // write ok
+    yyjson_mut_val *key0 = yyjson_mut_obj(doc); ok = yyjson_mut_arr_append(key, key0); //IFOK(ok);
+    yyjson_mut_val *key1 = yyjson_mut_obj(doc); ok = yyjson_mut_arr_append(key, key1); //IFOK(ok);
+    yyjson_mut_val *key2 = yyjson_mut_obj(doc); ok = yyjson_mut_arr_append(key, key2); //IFOK(ok);
     
-    ok = yyjson_mut_obj_add_str(doc, key0, "reName", ""); IFOK(ok);
-    ok = yyjson_mut_obj_add_str(doc, key0, "fullPath", "a.b");  IFOK(ok);
-    ok = yyjson_mut_obj_add_str(doc, key0, "name", "b"); IFOK(ok);
-    ok = yyjson_mut_obj_add_str(doc, key1, "reName", ""); IFOK(ok);
-    ok = yyjson_mut_obj_add_str(doc, key1, "fullPath", "a.c");  IFOK(ok);
-    ok = yyjson_mut_obj_add_str(doc, key1, "name", "c"); IFOK(ok);
-    ok = yyjson_mut_obj_add_str(doc, key2, "reName", "");  IFOK(ok);
-    ok = yyjson_mut_obj_add_str(doc, key2, "fullPath", "a.d"); IFOK(ok);
-    ok = yyjson_mut_obj_add_str(doc, key2, "name", "d"); IFOK(ok);
+    ok = yyjson_mut_obj_add_str(doc, key0, "reName", ""); //IFOK(ok);
+    ok = yyjson_mut_obj_add_str(doc, key0, "fullPath", "a.b");  //IFOK(ok);
+    ok = yyjson_mut_obj_add_str(doc, key0, "name", "b"); //IFOK(ok);
+    ok = yyjson_mut_obj_add_str(doc, key1, "reName", ""); //IFOK(ok);
+    ok = yyjson_mut_obj_add_str(doc, key1, "fullPath", "a.c"); //IFOK(ok);
+    ok = yyjson_mut_obj_add_str(doc, key1, "name", "c"); //IFOK(ok);
+    ok = yyjson_mut_obj_add_str(doc, key2, "reName", ""); //IFOK(ok);
+    ok = yyjson_mut_obj_add_str(doc, key2, "fullPath", "a.d"); //IFOK(ok);
+    ok = yyjson_mut_obj_add_str(doc, key2, "name", "d"); //IFOK(ok);
 
     // To string, minified
-    const char *json = yyjson_mut_write(doc, 0, NULL);
+    const char *json = yyjson_mut_write(doc, YYJSON_WRITE_PRETTY, NULL);
     if (json) {
         INFOF("json: %s", json);     
         /*

@@ -3,6 +3,7 @@
 #include "../include/utils.h"
 
 #include "../include/json_flatten.h"
+#include "../include/json_test.h"
 #include "../include/c_test.h"
 
 __attribute__((constructor))
@@ -13,12 +14,12 @@ void _init_callback(void )
 
 int main(int argc, char** argv, char** envp)
 {   
-    // INFO_NL("start");
-    // iter_json_file("data/json/100MB.json");
-    // INFO_NL("end");
+    CLOG(LOG_TYPE__INFO, "start");
+    iter_json_file("data/json/100MB.json");
+    CLOG(LOG_TYPE__INFO, "end");
 
     // test_write_json_string_sample_code();
-    test_write_json_string();
+    // test_write_json_string();
 
     return 0;
 }

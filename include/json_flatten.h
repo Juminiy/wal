@@ -100,7 +100,7 @@ struct json_flatten {
 struct json_flatten * init_json_flatten(void );
 void free_json_flatten(struct json_flatten * );
 void iter_json_flatten(struct json_flatten *);
-char* json_flatten_to_buffer(struct json_flatten *);
+char* json_flatten_to_buffer(struct json_flatten *, yyjson_write_flag);
 
 void iter_json_string(const char * );
 void iter_json_file(const char * );

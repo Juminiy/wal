@@ -18,13 +18,17 @@ void iter_json_file(const char * file_name)
         ERRORF("read error (%u): %s at position: %lu", err.code, err.msg, err.pos);
         return;
     }
-
-
+    
     yyjson_val *root = yyjson_doc_get_root(doc);
     struct json_flatten * jf = init_json_flatten();
     iter_yyjson_doc_root(root, "", jf);
     
-    iter_json_flatten(jf);
+    // iter_json_flatten(jf);
+    char * jstr = json_flatten_to_buffer(jf, YYJSON_WRITE_NOFLAG);
+    if(jstr) {
+        INFO_NL(jstr);
+        free(jstr);
+    }
 
     free_json_flatten(jf);
     yyjson_doc_free(doc);
@@ -242,15 +246,99 @@ void iter_json_flatten(struct json_flatten * jf)
     INFOF_NL("key_cnt: %llu, val_cnt: %llu", tot_key_cnt_of, tot_val_cnt_of);
 }
 
-char* json_flatten_to_buffer(struct json_flatten * jf)
+char* json_flatten_to_buffer(struct json_flatten * jf, yyjson_write_flag flg)
 {
+
+    yyjson_mut_doc *doc = yyjson_mut_doc_new(NULL);
+    yyjson_mut_val *root = yyjson_mut_obj(doc);
+    yyjson_mut_doc_set_root(doc, root);
+    yyjson_mut_val *data = yyjson_mut_obj(doc);
+    yyjson_mut_obj_add_val(doc, root, "data", data);
+    yyjson_mut_val *key = yyjson_mut_arr(doc);
+    yyjson_mut_obj_add_val(doc, root, "key", key);
+
+
     // write json_flatten to yyjson_mut_doc
+    struct key_rep key_rep_of;
+    char * map_key_of;
+    any_ptr map_value_of;
+    struct val_rep *val_of;
+    const char *raw_val;    struct sc_array_str *raw_arr;
+    bool bool_val;          struct sc_array_bool *bool_arr;
+    uint64_t u64_val;       struct sc_array_64 *u64_arr;
+    int64_t s64_val;        struct sc_array_s64 *s64_arr;
+    double f64_val;         struct sc_array_double *f64_arr;
+    const char *str_val;    struct sc_array_str *str_arr;
+
+    sc_array_foreach(jf->key, key_rep_of) {
+
+        map_key_of = key_rep_of.full_path;
+        map_value_of = sc_map_get_sv(jf->map, map_key_of); // be sure to get ok
+
+        val_of = (struct val_rep *)(map_value_of);
+        yyjson_type typ = UNSAFE_YYJSON_GET_TYPE(val_of->tag);
+        yyjson_subtype subtyp = UNSAFE_YYJSON_GET_SUBTYPE(val_of->tag);
+        
+        // write key
+        yyjson_mut_val *key_rep_elem = yyjson_mut_obj(doc);
+        yyjson_mut_arr_append(key, key_rep_elem);
+        yyjson_mut_obj_add_str(doc, key_rep_elem, "reName", "");
+        yyjson_mut_obj_add_str(doc, key_rep_elem, "fullPath", key_rep_of.full_path); 
+        yyjson_mut_obj_add_str(doc, key_rep_elem, "name", key_rep_of.short_path);
+
+        // write value
+        yyjson_mut_val *val_rep_arr;
+        switch (typ)
+        {
+        case YYJSON_TYPE_RAW:
+            raw_arr = (struct sc_array_str *)(val_of->arr);
+            val_rep_arr = yyjson_mut_arr_with_str(doc, raw_arr->elems, raw_arr->size);
+            break;
+
+        case YYJSON_TYPE_BOOL:
+            bool_arr = (struct sc_array_bool *)(val_of->arr);
+            val_rep_arr = yyjson_mut_arr_with_bool(doc, bool_arr->elems, bool_arr->size);
+            break;
+
+        case YYJSON_TYPE_NUM:
+            switch (subtyp)
+            {
+            case YYJSON_SUBTYPE_UINT:
+                u64_arr = (struct sc_array_64 *)(val_of->arr);
+                val_rep_arr = yyjson_mut_arr_with_uint64(doc, u64_arr->elems, u64_arr->size);
+                break;
+
+            case YYJSON_SUBTYPE_SINT:
+                s64_arr = (struct sc_array_s64 *)(val_of->arr);
+                val_rep_arr = yyjson_mut_arr_with_sint64(doc, s64_arr->elems, s64_arr->size);
+                break;
+
+            case YYJSON_SUBTYPE_REAL:
+                f64_arr = (struct sc_array_double *)(val_of->arr);
+                val_rep_arr = yyjson_mut_arr_with_double(doc, f64_arr->elems, f64_arr->size);
+                break;
+
+            }
+            break;
+
+        case YYJSON_TYPE_STR:
+            str_arr = (struct sc_array_str *)(val_of->arr);
+            val_rep_arr = yyjson_mut_arr_with_str(doc, str_arr->elems, str_arr->size);
+            break;
+
+        }
+        yyjson_mut_obj_add_val(doc, data, map_key_of, val_rep_arr);
+    }
+
 
     // write yyjson_mut_doc to buffer(char*)
+    char * jstr = yyjson_mut_write(doc, flg, NULL);
 
     // free yyjson_mut_doc
+    yyjson_mut_doc_free(doc);
 
     // return buffer
+    return jstr;
 }
 
 // void assign_hashmap_value_func_debug_s64

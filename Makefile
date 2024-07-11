@@ -3,7 +3,8 @@ export
 .PHONY:
 	all main build test clean ssrc yyjson
 
-c_args= -std=gnu99 -Wall -pedantic $(c_debug) $(c_mt)
+c_args= -std=gnu99 -Wall -pedantic $(c_performance) $(c_mt)
+c_performance= -O3 -DPERFORMANCE
 c_release= -O2 -DRELEASE
 c_debug= -O0 -g -DDEBUG
 c_deep_stack= -Wl,--stack=536870912

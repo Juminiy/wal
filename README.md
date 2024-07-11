@@ -58,3 +58,4 @@
 13. performance-test:
     1. 100MB JSON: https://github.com/seductiveapps/largeJSON/blob/master/100mb.json
     2. 15GB JSON: curl -L http://openlibrary.org/data/ol_cdump_latest.txt.gz  | gunzip | cut -f 5 > ol_cdump.json
+14. load of .so module plugin in golang
