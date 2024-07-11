@@ -24,5 +24,6 @@ int test_c_hashmap(void );
 void test_std_funcs(void );
 void test_map_example(void );
 void test_map_full_of_all(void );
+void test_sys_memory_out(void );
 
 #endif//#define C_TEST_H

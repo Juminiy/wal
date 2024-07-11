@@ -3,7 +3,7 @@ export
 .PHONY:
 	all main build test clean ssrc yyjson
 
-c_args= -std=gnu99 -Wall -pedantic $(c_debug) 
+c_args= -std=gnu99 -Wall -pedantic $(c_debug) $(c_mt)
 c_release= -O2 -DRELEASE
 c_debug= -O0 -g -DDEBUG
 c_deep_stack= -Wl,--stack=536870912
@@ -41,6 +41,8 @@ clean:
 	rm -f $(app_fd)
 	rm -f src/*.o && rm -rf $(build_dir)
 
+clean_under_objs:
+	rm -f $(dst_objs)
 
 # template not modify
 objs: $(patsubst %.c,%.o,$(wildcard *.c))

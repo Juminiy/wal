@@ -99,16 +99,18 @@ struct json_flatten {
 
 struct json_flatten * init_json_flatten(void );
 void free_json_flatten(struct json_flatten * );
+void iter_json_flatten(struct json_flatten *);
+char* json_flatten_to_buffer(struct json_flatten *);
+
+void iter_json_string(const char * );
+void iter_json_file(const char * );
 
 void iter_yyjson_doc_root(const yyjson_val * , const char * , struct json_flatten *);
 void iter_yyjson_doc_obj(const yyjson_val * , const char * , struct json_flatten *);
 void iter_yyjson_doc_arr(const yyjson_val * , const char * , struct json_flatten *);
 
-void iter_json_string(const char * );
-void iter_json_file(const char * );
-
 char* split_dot_get_last_val(const char * );
-void iter_json_flatten(struct json_flatten *);
+
 
 #define UNSAFE_YYJSON_GET_TYPE(tag) \
         (yyjson_type)((uint8_t)(tag) & YYJSON_TYPE_MASK)

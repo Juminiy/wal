@@ -158,4 +158,6 @@ char* get_time_now_str(void );
             fclose(tfile); \
         } while(0)
 
+#define ARR_SZ(arr) (sizeof(arr) / sizeof(arr[0]))
+
 #endif//#define UTILS_H

@@ -27,7 +27,7 @@ void iter_json_file(const char * file_name)
     iter_json_flatten(jf);
 
     free_json_flatten(jf);
-    free(doc);
+    yyjson_doc_free(doc);
 
 }  
 
@@ -170,7 +170,7 @@ void iter_yyjson_doc_obj(
         char *cat_key_of = NULL;
         STR3CAT(cat_key_of, key_prefix, JSON_FLATTEN_SPLIT_STR, key_of);
         iter_yyjson_doc_root(val, cat_key_of, jf);
-        // free(cat_key_of); // sure to cause error but need to free a bit
+        // free(cat_key_of); // sure to cause error but need to free not alc
     }
 }
 
@@ -185,8 +185,11 @@ struct json_flatten * init_json_flatten(void )
 
 void free_json_flatten(struct json_flatten * jf)
 {
-     // free data
-        // free each value of val_ptr(void*)
+     // free map
+        // do not free key
+        // free each key map to val_rep(void*)
+            // tag is uint64_t cannot free 
+            // free val_rep.arr(void*)
     sc_map_term_sv(jf->map);
 
     // free key 
@@ -237,6 +240,17 @@ void iter_json_flatten(struct json_flatten * jf)
     }
 
     INFOF_NL("key_cnt: %llu, val_cnt: %llu", tot_key_cnt_of, tot_val_cnt_of);
+}
+
+char* json_flatten_to_buffer(struct json_flatten * jf)
+{
+    // write json_flatten to yyjson_mut_doc
+
+    // write yyjson_mut_doc to buffer(char*)
+
+    // free yyjson_mut_doc
+
+    // return buffer
 }
 
 // void assign_hashmap_value_func_debug_s64

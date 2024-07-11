@@ -13,9 +13,12 @@ void _init_callback(void )
 
 int main(int argc, char** argv, char** envp)
 {   
-    INFO_NL("start");
-    iter_json_file("data/json/twitter.json");
-    INFO_NL("end");
+    // INFO_NL("start");
+    // iter_json_file("data/json/100MB.json");
+    // INFO_NL("end");
+
+    // test_write_json_string_sample_code();
+    test_write_json_string();
 
     return 0;
 }

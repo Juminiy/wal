@@ -89,3 +89,21 @@ void test_std_funcs(void )
     INFOF("%llu, %llu", UINT_MAX, 0);
     
 }
+
+void test_sys_memory_out(void )
+{
+    #define GB_ALLOC 1<<30
+    uint64_t time_of_alloc_1GB = 0;
+    int * i32_ptr = NULL;
+    do {
+
+        i32_ptr = (int*)malloc(sizeof(int) * GB_ALLOC);
+        ++ time_of_alloc_1GB;
+        INFOF("%p, %llu", i32_ptr, time_of_alloc_1GB);
+        if(i32_ptr == NULL) {
+            INFOF("alloc 1GB: %llu times", time_of_alloc_1GB);
+            ERRORL(strerror(errno));
+        }
+        PAUSE(1000);
+    }while(true);
+}
