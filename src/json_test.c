@@ -106,7 +106,7 @@ void test_read_json_file_sample_code(void )
     // Read JSON file, allowing comments and trailing commas
     yyjson_read_flag flg = YYJSON_READ_ALLOW_COMMENTS | YYJSON_READ_ALLOW_TRAILING_COMMAS;
     yyjson_read_err err;
-    yyjson_doc *doc = yyjson_read_file("data/json/github_api_users_{user}.json", flg, NULL, &err);
+    yyjson_doc *doc = yyjson_read_file("data/json/github_api_users_get.json", flg, NULL, &err);
 
     // Iterate over the root object
     if (doc) {
@@ -130,7 +130,7 @@ void test_read_json_file(void )
 {
     yyjson_read_flag flg = YYJSON_READ_ALLOW_COMMENTS | YYJSON_READ_ALLOW_TRAILING_COMMAS;
     yyjson_read_err err;
-    yyjson_doc *doc = yyjson_read_file("data/json/github_api_users.json", flg, NULL, &err);
+    yyjson_doc *doc = yyjson_read_file("data/json/github_api_users_list.json", flg, NULL, &err);
 
     if(!doc){
         ERRORF("read error (%u): %s at position: %ld", err.code, err.msg, err.pos);
@@ -146,7 +146,7 @@ void test_read_json_file(void )
 void test_write_json_file_sample_code(void )
 {
     // Read the JSON file as a mutable doc
-    yyjson_doc *idoc = yyjson_read_file("data/json/github_api_users_dup.json", 0, NULL, NULL);
+    yyjson_doc *idoc = yyjson_read_file("data/json/github_api_users_list.json", 0, NULL, NULL);
     yyjson_mut_doc *doc = yyjson_doc_mut_copy(idoc, NULL);
     yyjson_mut_val *obj = yyjson_mut_doc_get_root(doc);
 
@@ -164,7 +164,7 @@ void test_write_json_file_sample_code(void )
     // Write the json pretty, escape unicode
     yyjson_write_flag flg = YYJSON_WRITE_PRETTY | YYJSON_WRITE_ESCAPE_UNICODE;
     yyjson_write_err err;
-    yyjson_mut_write_file("data/json/github_api_users_dup.json", doc, flg, NULL, &err);
+    yyjson_mut_write_file("data/json/github_api_users_list_dup.json", doc, flg, NULL, &err);
     if (err.code) {
         ERRORF("write error (%u): %s", err.code, err.msg);
     }

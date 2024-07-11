@@ -38,6 +38,7 @@ extern pthread_mutex_t log_mutex;
 
 // void ilog(const char *, const char *, char *);
 
+// ILOG MT Safe
 #define ILOG(file_name, type, msg) \
         do { \
             char *app_buf = NULL; \
@@ -48,23 +49,40 @@ extern pthread_mutex_t log_mutex;
             free(app_buf); \
         } while(0)
 
+// ILOG NoLock
+#define ILOG_NL(file_name, type, msg) \
+        do { \
+            char *app_buf = NULL; \
+            STR2CAT(app_buf, type, msg); \
+            write_record_log(file_name, app_buf); \
+            free(app_buf); \
+        } while(0)
+
 // lookup whether to eval the replacements
 /*
     __TYPEOF__(file_name) file_name_eval = file_name; \
     __TYPEOF__(type) type_eval = type; \
 */
-#define ILOG_FMT(file_name, type, fmt, ...) \
+#define ILOG_FMT_FN(ilog_fn, file_name, type, fmt, ...) \
         do { \
             char log_buf[DEFAULT_LOG_BUF_LEN]; \
             int sz = snprintf(log_buf, DEFAULT_LOG_BUF_LEN, fmt, __VA_ARGS__); \
             if (sz == -1) { \
                 perror("need to alloc more"); \
             } \
-            ILOG(file_name, type, log_buf); \
+            ilog_fn(file_name, type, log_buf); \
         } while(0)
 
-#define INFO(msg)        ILOG(DEFAULT_LOG_PATH, LOG_TYPE__INFO, msg)
-#define INFOF(fmt, ...)  ILOG_FMT(DEFAULT_LOG_PATH, LOG_TYPE__INFO, fmt, __VA_ARGS__)
+#define ILOG_FMT(file_name, type, fmt, ...) \
+        ILOG_FMT_FN(ILOG, file_name, type, fmt, __VA_ARGS__)
+
+#define ILOG_FMT_NL(file_name, type, fmt, ...) \
+        ILOG_FMT_FN(ILOG_NL, file_name, type, fmt, __VA_ARGS__)
+
+#define INFO(msg)          ILOG(DEFAULT_LOG_PATH, LOG_TYPE__INFO, msg)
+#define INFO_NL(msg)       ILOG_NL(DEFAULT_LOG_PATH, LOG_TYPE__INFO, msg)
+#define INFOF(fmt, ...)    ILOG_FMT(DEFAULT_LOG_PATH, LOG_TYPE__INFO, fmt, __VA_ARGS__)
+#define INFOF_NL(fmt, ...) ILOG_FMT_NL(DEFAULT_LOG_PATH, LOG_TYPE__INFO, fmt, __VA_ARGS__)
 
 #define WARN(msg)        ILOG(DEFAULT_LOG_PATH, LOG_TYPE__WARN, msg)
 #define WARNF(fmt, ...)  ILOG_FMT(DEFAULT_LOG_PATH, LOG_TYPE__WARN, fmt, __VA_ARGS__)

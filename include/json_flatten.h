@@ -151,4 +151,50 @@ void iter_json_flatten(struct json_flatten *);
                 value_typ \
         )
 
+#define ITER_FLATTEN_JSON_PAIR(map_key_of, map_value_of, fn_of) \
+        do { \
+            struct val_rep *val_of = (struct val_rep *)(map_value_of); \
+            yyjson_type typ = UNSAFE_YYJSON_GET_TYPE(val_of->tag); \
+            yyjson_subtype subtyp = UNSAFE_YYJSON_GET_SUBTYPE(val_of->tag); \
+            const char *raw_val;    struct sc_array_str *raw_arr = NULL; \
+            bool bool_val;          struct sc_array_bool *bool_arr = NULL; \
+            uint64_t u64_val;       struct sc_array_64 *u64_arr = NULL; \
+            int64_t s64_val;        struct sc_array_s64 *s64_arr = NULL; \
+            double f64_val;         struct sc_array_double *f64_arr = NULL; \
+            const char *str_val;    struct sc_array_str *str_arr = NULL; \
+            switch (typ) \
+            { \
+            case YYJSON_TYPE_RAW: \
+                raw_arr = (struct sc_array_str *)(val_of->arr); \
+                sc_array_foreach(raw_arr, raw_val) { fn_of; } \
+                break; \
+            case YYJSON_TYPE_BOOL: \
+                bool_arr = (struct sc_array_bool *)(val_of->arr); \
+                sc_array_foreach(bool_arr, bool_val) { fn_of; } \
+                break; \
+            case YYJSON_TYPE_NUM: \
+                switch (subtyp) \
+                { \
+                case YYJSON_SUBTYPE_UINT: \
+                    u64_arr = (struct sc_array_64 *)(val_of->arr); \
+                    sc_array_foreach(u64_arr, u64_val) { fn_of; } \
+                    break; \
+                case YYJSON_SUBTYPE_SINT: \
+                    s64_arr = (struct sc_array_s64 *)(val_of->arr); \
+                    sc_array_foreach(s64_arr, s64_val) { fn_of; } \
+                    break; \
+                case YYJSON_SUBTYPE_REAL: \
+                    f64_arr = (struct sc_array_double *)(val_of->arr); \
+                    sc_array_foreach(f64_arr, f64_val) { fn_of; } \
+                    break; \
+                } \
+                break; \
+            case YYJSON_TYPE_STR: \
+                str_arr = (struct sc_array_str *)(val_of->arr); \
+                sc_array_foreach(str_arr, str_val) { fn_of; } \
+                break; \
+            } \
+        } while(0)
+
+
 #endif//#define JSON_FLATTEN_H
