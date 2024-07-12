@@ -19,7 +19,6 @@ int main(int argc, char** argv, char** envp)
         puts(jstr);
         free(jstr);
     }
-    
     return 0;
 }
 
