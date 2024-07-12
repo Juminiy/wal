@@ -40,12 +40,12 @@ main: $(build_dir)/*.o
 	$(CC) $(c_args) -o $@ $^
 
 main_use_dll:
-# /home/wz/wal/libjson_flatten.so
-	$(CC) $(c_args) -I/home/wz/wal/include -L. build/main.o -ljson_flatten -o main
+	$(CC) $(c_args) -I../include -L. build/main.o -ljson_flatten -o main
 
 libjson_flatten.so: src/json_flatten.c thirdparty/yyjson/yyjson.c thirdparty/sc/map/sc_map.c
 	$(CC) $(c_args) $(c_dll) -o $@ $^
 	sudo chmod 777 $@
+	cp $@ golang/$@
 
 clean:
 	rm -f main *.o *.exe
@@ -53,7 +53,7 @@ clean:
 	rm -f src/*.o && rm -rf $(build_dir)
 
 clean_under_objs:
-	rm -f $(dst_objs)
+	rm -f $(dst_objs) libjson_flatten.so
 
 # template not modify
 objs: $(patsubst %.c,%.o,$(wildcard *.c))

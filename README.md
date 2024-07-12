@@ -63,6 +63,7 @@
     2. 15GB JSON: curl -L http://openlibrary.org/data/ol_cdump_latest.txt.gz  | gunzip | cut -f 5 > ol_cdump.json
 14. load of .so module plugin in golang
     1.  .so dynamic linked failed both in GNUC99 and GoRuntime1.22
+    2.  success both in GNUC99 and GoRuntime1.22 ON ARM64-Darwin
 15. use microsoft/mimalloc
 16. find a high performance xml.Decoder and xml.Encoder
 17. CGO cgo -
