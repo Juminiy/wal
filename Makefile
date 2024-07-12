@@ -56,7 +56,7 @@ clean_under_objs:
 	rm -f $(dst_objs) libjson_flatten.so
 
 install_thirdparty:
-	cd thirdparty && git clone https://github.com/
+	cd thirdparty && git clone https://github.com/tezc/sc.git
 
 # template not modify
 objs: $(patsubst %.c,%.o,$(wildcard *.c))
