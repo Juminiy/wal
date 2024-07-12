@@ -96,8 +96,7 @@ void test_sys_memory_out(void )
     uint64_t time_of_alloc_1GB = 0;
     int * i32_ptr = NULL;
     do {
-
-        i32_ptr = (int*)malloc(sizeof(int) * GB_ALLOC);
+        MALLOC_ARR(i32_ptr, int, GB_ALLOC);
         ++ time_of_alloc_1GB;
         INFOF("%p, %llu", i32_ptr, time_of_alloc_1GB);
         if(i32_ptr == NULL) {

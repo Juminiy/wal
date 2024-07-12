@@ -55,7 +55,15 @@
     1.  record for all alloc but maynot be freed memory
     2.  use freelist or mimalloc in application level mimalloc and mifree for reused and preheet
     3.  memory leak tools like: valgrind 
+    4.  try to manage memory leak
+        1.  loop for collect and signal in global obj like yyjson_doc
+        2.  change the memory management thought, convert small alloc/free to middle/PAGE_SIZE block to manage
 13. performance-test:
     1. 100MB JSON: https://github.com/seductiveapps/largeJSON/blob/master/100mb.json
     2. 15GB JSON: curl -L http://openlibrary.org/data/ol_cdump_latest.txt.gz  | gunzip | cut -f 5 > ol_cdump.json
 14. load of .so module plugin in golang
+    1.  .so dynamic linked failed both in GNUC99 and GoRuntime1.22
+15. use microsoft/mimalloc
+16. find a high performance xml.Decoder and xml.Encoder
+17. CGO cgo -
+18. Linux kernel -

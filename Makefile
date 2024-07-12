@@ -8,7 +8,9 @@ c_performance= -O3 -DPERFORMANCE
 c_release= -O2 -DRELEASE
 c_debug= -O0 -g -DDEBUG
 c_deep_stack= -Wl,--stack=536870912
-c_mt= -lpthread
+c_mt= -lpthread -DMTS
+c_dll= -fPIC -shared
+c_debug_compile_args= -v
 
 app_fd= app.log
 build_dir= build
@@ -36,6 +38,14 @@ sc_map:
 
 main: $(build_dir)/*.o
 	$(CC) $(c_args) -o $@ $^
+
+main_use_dll:
+# /home/wz/wal/libjson_flatten.so
+	$(CC) $(c_args) -I/home/wz/wal/include -L. build/main.o -ljson_flatten -o main
+
+libjson_flatten.so: src/json_flatten.c thirdparty/yyjson/yyjson.c thirdparty/sc/map/sc_map.c
+	$(CC) $(c_args) $(c_dll) -o $@ $^
+	sudo chmod 777 $@
 
 clean:
 	rm -f main *.o *.exe

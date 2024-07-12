@@ -1,5 +1,6 @@
 #include "../thirdparty/sc/map/sc_map.h"
 #include "../include/c_test.h"
+#include "../include/utils.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -71,15 +72,14 @@ static char *str_random(size_t size)
 			   "abcdefghijklmnopqrstuvwxyz"
 			   "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	uint32_t index;
-	char *dest = malloc(size + 1);
+	char *dest = NULL;
+	MALLOC_STR(dest, size);
 
 	for (size_t i = 0; i < size; ++i) {
 		index = (uint32_t) ((double) rand() / RAND_MAX *
 				    (sizeof(ch) - 1));
 		dest[i] = ch[index];
 	}
-
-	dest[size - 1] = '\0';
 
 	return dest;
 }
@@ -2137,8 +2137,10 @@ static void test6(void)
 	uint32_t val;
 	struct sc_map_32 map;
 
-	uint32_t *keys = malloc(sizeof(uint32_t) * count);
-	uint32_t *values = malloc(sizeof(uint32_t) * count);
+	uint32_t *keys = NULL;
+	MALLOC_ARR(keys, uint32_t, count);
+	uint32_t *values = NULL;
+	MALLOC_ARR(values, uint32_t, count);
 
 	for (int i = 0; i < count; i++) {
 		keys[i] = i;

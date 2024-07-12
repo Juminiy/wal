@@ -33,13 +33,13 @@ decl_test_fnx(5, 900, call_fnx_ret_val) // 0.9s
 
 struct tasks_desc* make_test_tasks_desc(size_t sz)
 {
-    struct tasks_desc* tdesc = 
-        (struct tasks_desc*)malloc(sizeof(struct tasks_desc));
+    struct tasks_desc* tdesc = NULL;
+    MALLOC_OBJ(tdesc, struct tasks_desc);
 
     tdesc->max_thds = CPU_MAX_THDS;
     tdesc->task_cnt = sz;
-    tdesc->tasks = 
-        (struct task_desc*)malloc(sizeof(struct task_desc) * sz);
+    MALLOC_ARR(tdesc->tasks, struct task_desc, sz);
+
     // call_fnx_stack for each jobs
     assign_fnx(tdesc->tasks[0], 0); 
     assign_fnx(tdesc->tasks[1], 1); 
@@ -80,12 +80,13 @@ void cowork_example(void )
 struct test_retval* make_faked_retval(void )
 {
     srand((unsigned int)time(NULL));
-    struct test_retval* val = (struct test_retval*)malloc(sizeof(struct test_retval));
+    struct test_retval* val = NULL;
+    MALLOC_OBJ(val, struct test_retval);
 
     val->i32_val = RAND_Int(0, 1024);
 
     int char_sz = RAND_Int(0, 16);
-    val->str_val = (char*)malloc(sizeof(char) * char_sz); 
+    MALLOC_STR(val->str_val, char_sz);
     RAND_Str(val->str_val, char_sz);
 
     RAND_F64Arr(val->f64_arr_val, 8, 0.0, 100.0);

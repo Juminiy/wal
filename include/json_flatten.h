@@ -3,6 +3,8 @@
 #ifndef JSON_FLATTEN_H
 #define JSON_FLATTEN_H
 
+#include "../include/utils.h"
+
 #include "../thirdparty/yyjson/yyjson.h" 
 #include "../thirdparty/sc/array/sc_array.h"
 #include "../thirdparty/sc/map/sc_map.h"
@@ -33,7 +35,7 @@ layout: struct key_rep 32B
 */
 struct key_rep {
 
-    // full_path is a malloc buffer with '\0'
+    // full_path is a alloc buffer with '\0'
     // example: a.b.c.d.e.f
     char * full_path;
 
@@ -102,12 +104,13 @@ void free_json_flatten(struct json_flatten * );
 void iter_json_flatten(struct json_flatten *);
 char* json_flatten_to_buffer(struct json_flatten *, yyjson_write_flag);
 
+char * json_flatten_of(const char * );
 void iter_json_string(const char * );
 void iter_json_file(const char * );
 
-void iter_yyjson_doc_root(const yyjson_val * , const char * , struct json_flatten *);
-void iter_yyjson_doc_obj(const yyjson_val * , const char * , struct json_flatten *);
-void iter_yyjson_doc_arr(const yyjson_val * , const char * , struct json_flatten *);
+void iter_yyjson_doc_root(yyjson_val * , const char * , struct json_flatten *);
+void iter_yyjson_doc_obj(yyjson_val * , const char * , struct json_flatten *);
+void iter_yyjson_doc_arr(yyjson_val * , const char * , struct json_flatten *);
 
 char* split_dot_get_last_val(const char * );
 

@@ -1,7 +1,28 @@
-#include "../include/log.h"
+// #include "../include/log.h"
 #include "../include/utils.h"
 
 #include "../include/json_flatten.h"
+
+char * json_flatten_of(const char * old)
+{
+    yyjson_doc *doc = yyjson_read(old, strlen(old), YYJSON_READ_NOFLAG);
+    if (!doc) {
+        return NULL;
+    }
+
+    yyjson_val *root = yyjson_doc_get_root(doc);
+
+    
+    struct json_flatten * jf = init_json_flatten();
+    iter_yyjson_doc_root(root, "", jf);
+    
+    char * jstr = json_flatten_to_buffer(jf, YYJSON_WRITE_NOFLAG);
+
+    free_json_flatten(jf);
+    yyjson_doc_free(doc);
+
+    return jstr;
+}
 
 void iter_json_string(const char * json_str)
 {
@@ -15,7 +36,7 @@ void iter_json_file(const char * file_name)
     yyjson_doc *doc = yyjson_read_file(file_name, flg, NULL, &err);
 
     if(!doc){
-        ERRORF("read error (%u): %s at position: %lu", err.code, err.msg, err.pos);
+        // ERRORF("read error (%u): %s at position: %lu", err.code, err.msg, err.pos);
         return;
     }
     
@@ -26,7 +47,7 @@ void iter_json_file(const char * file_name)
     // iter_json_flatten(jf);
     char * jstr = json_flatten_to_buffer(jf, YYJSON_WRITE_NOFLAG);
     if(jstr) {
-        INFO_NL(jstr);
+        // INFO_NL(jstr);
         free(jstr);
     }
 
@@ -36,7 +57,7 @@ void iter_json_file(const char * file_name)
 }  
 
 void iter_yyjson_doc_root(
-    const yyjson_val *root, 
+    yyjson_val *root, 
     const char *key_prefix, 
     struct json_flatten * jf
 )
@@ -46,14 +67,14 @@ void iter_yyjson_doc_root(
     
     yyjson_type typ = yyjson_get_type(root);
     yyjson_subtype subtyp = yyjson_get_subtype(root);
-    const char * typ_desc = yyjson_get_type_desc(root);
+    // const char * typ_desc = yyjson_get_type_desc(root);
 
-    const char *raw_val = NULL;         struct sc_array_str *raw_arr = NULL;
-    bool bool_val = false;              struct sc_array_bool *bool_arr = NULL;
-    uint64_t u64_val = 0;               struct sc_array_64 *u64_arr = NULL;
-    int64_t s64_val = 0;                struct sc_array_s64 *s64_arr = NULL;
+    const char *raw_val = NULL;         struct sc_array_str *raw_arr    = NULL;
+    bool bool_val = false;              struct sc_array_bool *bool_arr  = NULL;
+    uint64_t u64_val = 0;               struct sc_array_64 *u64_arr     = NULL;
+    int64_t s64_val = 0;                struct sc_array_s64 *s64_arr    = NULL;
     double f64_val = 0.0;               struct sc_array_double *f64_arr = NULL;
-    const char *str_val = NULL;         struct sc_array_str *str_arr = NULL;
+    const char *str_val = NULL;         struct sc_array_str *str_arr    = NULL;
 
     if (typ >= 1 && typ <= 5)
     {
@@ -105,7 +126,7 @@ void iter_yyjson_doc_root(
                 break;
 
             default:
-                ERRORL(UNKNOWN_JSON_SUB_TYPE);
+                // ERRORL(UNKNOWN_JSON_SUB_TYPE);
             }
             break;
 
@@ -131,14 +152,14 @@ void iter_yyjson_doc_root(
             break;
 
         default:
-            ERRORL(UNKNOWN_JSON_TYPE);
+            // ERRORL(UNKNOWN_JSON_TYPE);
     }
     }
     
 }
 
 void iter_yyjson_doc_arr(
-    const yyjson_val *arr, 
+    yyjson_val *arr, 
     const char *key_prefix,  
     struct json_flatten * jf
 )
@@ -152,7 +173,7 @@ void iter_yyjson_doc_arr(
 }
 
 void iter_yyjson_doc_obj(
-    const yyjson_val *obj, 
+    yyjson_val *obj, 
     const char *key_prefix,  
     struct json_flatten * jf
 )
@@ -243,7 +264,7 @@ void iter_json_flatten(struct json_flatten * jf)
             );
     }
 
-    INFOF_NL("key_cnt: %llu, val_cnt: %llu", tot_key_cnt_of, tot_val_cnt_of);
+    // INFOF_NL("key_cnt: %lu, val_cnt: %lu", tot_key_cnt_of, tot_val_cnt_of);
 }
 
 char* json_flatten_to_buffer(struct json_flatten * jf, yyjson_write_flag flg)
@@ -260,15 +281,15 @@ char* json_flatten_to_buffer(struct json_flatten * jf, yyjson_write_flag flg)
 
     // write json_flatten to yyjson_mut_doc
     struct key_rep key_rep_of;
-    char * map_key_of;
-    any_ptr map_value_of;
-    struct val_rep *val_of;
-    const char *raw_val;    struct sc_array_str *raw_arr;
-    bool bool_val;          struct sc_array_bool *bool_arr;
-    uint64_t u64_val;       struct sc_array_64 *u64_arr;
-    int64_t s64_val;        struct sc_array_s64 *s64_arr;
-    double f64_val;         struct sc_array_double *f64_arr;
-    const char *str_val;    struct sc_array_str *str_arr;
+    char * map_key_of               = NULL;
+    any_ptr map_value_of            = NULL;
+    struct val_rep *val_of          = NULL;
+    struct sc_array_str *raw_arr    = NULL;
+    struct sc_array_bool *bool_arr  = NULL;
+    struct sc_array_64 *u64_arr     = NULL;
+    struct sc_array_s64 *s64_arr    = NULL;
+    struct sc_array_double *f64_arr = NULL;
+    struct sc_array_str *str_arr    = NULL;
 
     sc_array_foreach(jf->key, key_rep_of) {
 
@@ -287,7 +308,7 @@ char* json_flatten_to_buffer(struct json_flatten * jf, yyjson_write_flag flg)
         yyjson_mut_obj_add_str(doc, key_rep_elem, "name", key_rep_of.short_path);
 
         // write value
-        yyjson_mut_val *val_rep_arr;
+        yyjson_mut_val *val_rep_arr = NULL;
         switch (typ)
         {
         case YYJSON_TYPE_RAW:

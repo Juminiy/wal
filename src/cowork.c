@@ -102,8 +102,8 @@ struct tasks_option get_tasks_option(int _bin_rep)
 
 struct tasks_sync* tasks_sync_init(void )
 {
-    struct tasks_sync* state = 
-        (struct tasks_sync*)malloc(sizeof(struct tasks_sync));
+    struct tasks_sync* state = NULL;
+    MALLOC_OBJ(state, struct tasks_sync);
 
     pthread_mutex_init(&state->mu_lock, NULL);
     pthread_cond_init(&state->cond_sema, NULL);
@@ -123,7 +123,9 @@ void tasks_sync_free(struct tasks_sync* state)
 
 tasks_res tasks_res_init(size_t sz)
 {
-    return (tasks_res)malloc(sizeof(any_ptr) * sz);
+    tasks_res tres = NULL;
+    MALLOC_ARR(tres, any_ptr, sz);
+    return tres;
 }
 
 void tasks_res_display(tasks_res res, size_t sz, display_task_res fn)
