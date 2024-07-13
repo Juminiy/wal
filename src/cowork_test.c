@@ -1,6 +1,7 @@
 #include "../include/cowork.h"
 #include "../include/log.h"
 #include "../include/math.h"
+#include "../include/utils.h"
 
 #include "../include/cowork_test.h"
 

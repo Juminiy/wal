@@ -68,3 +68,4 @@
 16. find a high performance xml.Decoder and xml.Encoder
 17. CGO cgo -
 18. Linux kernel -
+19. Need to install: https://github.com/microsoft/mimalloc

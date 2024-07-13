@@ -22,7 +22,8 @@
 #include <sys/queue.h>
 #include <sys/times.h>
 
-#ifndef __APPLE__&&__MACH__
+#ifndef __APPLE__ \
+        && __MACH__
 
 #include <sys/io.h>
 #include <sys/epoll.h>

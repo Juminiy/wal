@@ -3,6 +3,8 @@
 #ifndef C_TEST_H
 #define C_TEST_H
 
+#include <mimalloc.h>
+
 struct test_type_a {
     int a;      // 4B
     float b;    // 4B
@@ -25,5 +27,6 @@ void test_std_funcs(void );
 void test_map_example(void );
 void test_map_full_of_all(void );
 void test_sys_memory_out(void );
+void test_mimalloc(void );
 
 #endif//#define C_TEST_H

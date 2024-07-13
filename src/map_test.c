@@ -2170,8 +2170,8 @@ static void test6(void)
 
 	sc_map_term_32(&map);
 
-	free(keys);
-	free(values);
+	MI_FREE(keys);
+	MI_FREE(values);
 }
 
 static void test_loop_foreach(void)

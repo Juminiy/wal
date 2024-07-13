@@ -17,6 +17,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <mimalloc.h>
+
 #if defined(__GNUC__) || \
     defined(__clang__) || \
     defined(__llvm__)
@@ -93,22 +95,22 @@ char* get_time_now_str(void );
 
 // val has declared to NULL or assigned to NULL
 #define MALLOC_ARR(val, typ, n) \
-        do { \
-            val = (typ*) malloc(sizeof(typ) * (n)); \
-            assert(val); \
-        } while(0)
+        val = mi_mallocn_tp(typ, n)
 
 // val has declared to NULL or assigned to NULL
 #define MALLOC_OBJ(val, typ) \
-        do { \
-            val = (typ*) malloc(sizeof(typ)); \
-            assert(val); \
-        } while(0)
+        val = mi_malloc_tp(typ)
 
 // str has declared to NULL or assigned to NULL
 #define MALLOC_STR(str, n) \
         MALLOC_ARR(str, char, (n+1)); \
         str[n] = '\0'
+
+#define MI_FREE(ptr) \
+        mi_free(ptr)
+
+#define C_FREE(ptr) \
+        free(ptr)
 
 #define STR2CAT(dest0, src0, src1) \
         size_t src0_sz = strlen(src0); \
@@ -145,7 +147,6 @@ char* get_time_now_str(void );
             fseek(tfile, 0, SEEK_END); \
             size_t buf_sz = ftell(tfile); \
             rewind(tfile); \
-            buf = NULL; \
             MALLOC_STR(buf, buf_sz); \
             if(buf == NULL){ \
                 ERRORF("alloc buffer %ldB error", buf_sz); \

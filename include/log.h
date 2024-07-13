@@ -46,7 +46,7 @@ extern pthread_mutex_t log_mutex;
             pthread_mutex_lock(&log_mutex); \
             write_record_log(file_name, app_buf); \
             pthread_mutex_unlock(&log_mutex); \
-            free(app_buf); \
+            MI_FREE(app_buf); \
         } while(0)
 
 // ILOG NoLock
@@ -55,7 +55,7 @@ extern pthread_mutex_t log_mutex;
             char *app_buf = NULL; \
             STR2CAT(app_buf, type, msg); \
             write_record_log(file_name, app_buf); \
-            free(app_buf); \
+            MI_FREE(app_buf); \
         } while(0)
 
 // lookup whether to eval the replacements
@@ -101,7 +101,7 @@ extern pthread_mutex_t log_mutex;
         do { \
             char* time_buf = get_time_now_str(); \
             printf("type [%s], time [%s], msg [%s]\n", type, time_buf, msg); \
-            free(time_buf); \
+            MI_FREE(time_buf); \
         } while(0)
         
 #define CLOG_FMT(type, fmt, ...) \
@@ -113,7 +113,7 @@ extern pthread_mutex_t log_mutex;
             } \
             char * time_buf = get_time_now_str(); \
             printf("type [%s], time [%s], msg [%s]\n", type, time_buf, log_buf); \
-            free(time_buf); \
+            MI_FREE(time_buf); \
         } while(0)
 
 void log_log_example(void );

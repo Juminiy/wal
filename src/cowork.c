@@ -76,8 +76,8 @@ void tasks_desc_free(struct tasks_desc* tds)
 {
     // for(int i = 0; i < tds->task_cnt; ++i)
     //     free(tds->tasks->param_list);
-    free(tds->tasks);
-    free(tds);
+    MI_FREE(tds->tasks);
+    MI_FREE(tds);
 }
 
 struct tasks_option get_tasks_option(int _bin_rep)
@@ -118,7 +118,7 @@ void tasks_sync_free(struct tasks_sync* state)
 {   
     pthread_cond_destroy(&state->cond_sema);
     pthread_mutex_destroy(&state->mu_lock);
-    free(state);
+    MI_FREE(state);
 }
 
 tasks_res tasks_res_init(size_t sz)
@@ -143,7 +143,7 @@ void tasks_res_free(tasks_res res, size_t sz)
         return;
     for(size_t i = 0; i < sz; i++)
     {
-        free(res[i]);
+        MI_FREE(res[i]);
     }
-    free(res);
+    MI_FREE(res);
 }

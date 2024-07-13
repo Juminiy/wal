@@ -37,10 +37,10 @@ void ptr_alloc_deref(void )
     for(int i = 0; i < arr2d_sz; i++)
     {
         INFOF("%014p %014p %014p", arr2d_ptr+i, arr2d_ptr[i], arr2d_ptr);
-        free(arr2d_ptr[i]);
+        MI_FREE(arr2d_ptr[i]);
     }
 
-    free(arr2d_ptr);
+    MI_FREE(arr2d_ptr);
 
 }
 
@@ -105,4 +105,21 @@ void test_sys_memory_out(void )
         }
         PAUSE(1000);
     }while(true);
+}
+
+void test_mimalloc(void )
+{
+    // mi_malloc();
+    // mi_calloc();
+    // mi_realloc();
+    // mi_expand();
+
+    // mi_free();
+    // mi_strdup();
+    // mi_strndup();
+    // mi_realpath();
+    int *arr10 = mi_mallocn_tp(int, 1<<10);
+    for(int i = 0; i < 1 << 10; ++i)
+        INFOF_NL("%d%c", arr10[i], (i == 9 ? ' ' : ','));
+    mi_free(arr10);
 }

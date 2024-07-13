@@ -65,7 +65,7 @@ void test_read_json_string(void )
     }
 
     yyjson_doc_free(jdoc);
-    free(jstr);
+    MI_FREE(jstr);
 
 }
 
@@ -95,7 +95,7 @@ void test_write_json_string_sample_code(void )
     const char *json = yyjson_mut_write(doc, YYJSON_WRITE_PRETTY, NULL);
     if (json) {
         INFOF("json: %s", json); // {"name":"Mash","star":4,"hits":[2,2,1,3]}
-        free((void *)json);
+        C_FREE((void *)json);
     }
 
     // Free the doc
@@ -168,7 +168,7 @@ void test_write_json_string(void )
                 "key": [{"reName": "", "fullPath": "", "name": ""}, {"reName": "", "fullPath": "", "name": ""}, {"reName": "", "fullPath": "", "name": ""}]
             }
         */ 
-        free((void *)json);
+        C_FREE((void *)json);
     }
 
     // Free the doc

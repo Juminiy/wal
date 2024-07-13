@@ -52,7 +52,7 @@ int write_record_log
     write(file_desc, "time [", 6);
     char *time_buf = get_time_now_str();
     write(file_desc, time_buf, strlen(time_buf));
-    free(time_buf);
+    MI_FREE(time_buf);
     write(file_desc, "], ", 3);
 
     // msg

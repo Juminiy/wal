@@ -24,7 +24,7 @@ char * json_flatten_of(const char * old)
     return jstr;
 }
 
-void iter_json_string(const char * json_str)
+void iter_json_string(const char * old)
 {
 
 }
@@ -47,8 +47,7 @@ void iter_json_file(const char * file_name)
     // iter_json_flatten(jf);
     char * jstr = json_flatten_to_buffer(jf, YYJSON_WRITE_NOFLAG);
     if(jstr) {
-        // INFO_NL(jstr);
-        free(jstr);
+        C_FREE(jstr);
     }
 
     free_json_flatten(jf);
@@ -222,7 +221,7 @@ void free_json_flatten(struct json_flatten * jf)
     sc_array_term(jf->key);
 
     // free self
-    free(jf);
+    MI_FREE(jf);
 }
 
 // no copy
