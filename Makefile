@@ -26,14 +26,14 @@ c_run_opt += env DYLD_INSERT_LIBRARIES=/usr/local/lib/libmimalloc.dylib
 c_dll_suffix= .dylib
 os_install= brew install
 prerun= install_name_tool -change @rpath/libmimalloc.1.dylib /usr/local/lib/libmimalloc.1.dylib main
-work_dir= ~/code/c/wal/
+work_dir= ~/code/c/wal
 endif
 ifeq ($(findstring Linux,$(_OS)),Linux)
 c_run_opt += env MIMALLOC_VERBOSE=1 LD_PRELOAD=/usr/lib/libmimalloc.so
 c_dll_suffix= .so
 os_install= sudo apt-get install
 prerun= export LD_LIBRARY_PATH=/usr/local/lib
-work_dir= ~/wal/
+work_dir= ~/wal
 endif
 
 app_log= app.log
