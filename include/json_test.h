@@ -3,8 +3,9 @@
 #ifndef JSON_TEST_H
 #define JSON_TEST_H
 
-#include "../thirdparty/yyjson/yyjson.h" 
-#include "../thirdparty/sc/array/sc_array.h"
+#include <yyjson.h>
+#include <sc_array.h>
+#include <sc_map.h>
 
 void test_read_json_string_sample_code(void );
 void test_read_json_string(void );

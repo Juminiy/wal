@@ -1,18 +1,15 @@
 # project specific ignore dirs & files 
-/bin
-/build 
 /.vscode
 /.idea
-/*.dSYM
 /*.vs
 
-*.zip
+/bin
+/build
+/thirdparty
 
 100MB.json
 main
 *.stackdump
-/thirdparty/c_hashmap
-/thirdparty/sc
 
 # Cpp github template ignore
 # include from https://github.com/github/gitignore/blob/main/C%2B%2B.gitignore

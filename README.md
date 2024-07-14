@@ -68,4 +68,6 @@
 16. find a high performance xml.Decoder and xml.Encoder
 17. CGO cgo -
 18. Linux kernel -
-19. Need to install: https://github.com/microsoft/mimalloc
+19. CMake Cmakelists.txt-
+20. dynamic linked how it memory layout
+21. make a json_flatten allocator learned by yyjson_doc

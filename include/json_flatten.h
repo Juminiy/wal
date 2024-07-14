@@ -5,9 +5,9 @@
 
 #include "../include/utils.h"
 
-#include "../thirdparty/yyjson/yyjson.h" 
-#include "../thirdparty/sc/array/sc_array.h"
-#include "../thirdparty/sc/map/sc_map.h"
+#include <yyjson.h>
+#include <sc_array.h>
+#include <sc_map.h>
 
 #define UNKNOWN_JSON_TYPE "unknown of json type"
 #define UNKNOWN_JSON_SUB_TYPE "unknown of json sub type"
@@ -87,7 +87,7 @@ struct json_flatten {
           |                         |        -----------------        ---------------------
          \ /                        -------> |tag: 8B|arr: 8B| -----> | | | | | | | | | | | ...
         | full_path_buffer '\0'|             -----------------        ---------------------
-                                            
+        (same address with key_rep.full_path)                     
 
 
     */

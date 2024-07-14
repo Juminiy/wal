@@ -3,9 +3,9 @@
 
 package main
 
-// #cgo CFLAGS: -I../include -I/usr/local/include/mimalloc-2.1
-// #cgo LDFLAGS: -L.. -L/usr/local/lib -ljson_flatten -lmimalloc
-// #include "../include/json_flatten.h"
+// #cgo CFLAGS: -I/usr/local/include/json_flatten -I/usr/local/include/sc -I/usr/local/include/yyjson -I/usr/local/include/mimalloc
+// #cgo LDFLAGS: -L/usr/local/lib -ljson_flatten -lsc_map -lyyjson -lmimalloc
+// #include <json_flatten.h>
 // #include <mimalloc.h>
 import "C"
 import (

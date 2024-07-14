@@ -1,7 +1,8 @@
-#include "../thirdparty/sc/map/sc_map.h"
 #include "../include/c_test.h"
-
 #include "../include/log.h"
+
+#include <sc_map.h>
+
 #include <stdio.h>
 
 void example_str(void)
