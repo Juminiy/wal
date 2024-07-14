@@ -4,12 +4,11 @@
 #include "../include/cowork.h"
 #include "../include/json_flatten.h"
 
-// comment when dylib
-// __attribute__((constructor))
-// void _init_callback(void )
-// {
-//     pthread_mutex_init(&log_mutex, NULL);
-// }
+__attribute__((constructor))
+void _init_callback(void )
+{
+    pthread_mutex_init(&log_mutex, NULL);
+}
 
 int main(int argc, char** argv, char** envp)
 {   
@@ -22,9 +21,8 @@ int main(int argc, char** argv, char** envp)
     return 0;
 }
 
-// comment when dylib
-// __attribute__((destructor))
-// void _callback_free(void )
-// {
-//     pthread_mutex_destroy(&log_mutex);
-// }
+__attribute__((destructor))
+void _callback_free(void )
+{
+    pthread_mutex_destroy(&log_mutex);
+}

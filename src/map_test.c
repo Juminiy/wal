@@ -1,7 +1,7 @@
 #include "../include/c_test.h"
 #include "../include/utils.h"
 
-#include <sc_map.h>
+#include <sc/sc_map.h>
 
 #include <assert.h>
 #include <stdio.h>

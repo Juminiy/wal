@@ -5,9 +5,9 @@
 
 #include "../include/utils.h"
 
-#include <yyjson.h>
-#include <sc_array.h>
-#include <sc_map.h>
+#include <yyjson/yyjson.h>
+#include <sc/sc_array.h>
+#include <sc/sc_map.h>
 
 #define UNKNOWN_JSON_TYPE "unknown of json type"
 #define UNKNOWN_JSON_SUB_TYPE "unknown of json sub type"

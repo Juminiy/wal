@@ -64,7 +64,7 @@
 14. load of .so module plugin in golang
     1.  .so dynamic linked failed both in GNUC99 and GoRuntime1.22
     2.  success both in GNUC99 and GoRuntime1.22 ON ARM64-Darwin
-15. use microsoft/mimalloc
+15. use microsoft/mimalloc, OK.
 16. find a high performance xml.Decoder and xml.Encoder
 17. CGO cgo -
 18. Linux kernel -

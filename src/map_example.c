@@ -1,7 +1,7 @@
 #include "../include/c_test.h"
 #include "../include/log.h"
 
-#include <sc_map.h>
+#include <sc/sc_map.h>
 
 #include <stdio.h>
 

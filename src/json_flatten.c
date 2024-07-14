@@ -230,6 +230,7 @@ void free_json_flatten(struct json_flatten * jf)
 // a         -> a
 // a.b       -> b
 // a.b.c.d.e -> e
+// not safe restrictly, need to improve
 char* split_dot_get_last_val(const char * full_path)
 {
     if(full_path == NULL)
